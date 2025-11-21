@@ -17,15 +17,15 @@ export default function ServicesSection() {
             your digital ideas to life.
           </p>
         </div>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 items-start gap-8 py-12 sm:grid-cols-2 md:gap-12">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 items-start gap-8 py-12 sm:grid-cols-2 md:grid-cols-4">
           {services.map((service) => (
             <Card
               key={service.title}
-              className="group transition-all duration-300 hover:shadow-primary/20 hover:shadow-xl hover:-translate-y-2"
+              className="group transition-all duration-300 hover:shadow-primary/20 hover:shadow-xl hover:-translate-y-2 text-center"
             >
-              <CardHeader className="flex flex-row items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <service.icon className="w-6 h-6 text-primary group-hover:text-primary-foreground transition-colors" />
+              <CardHeader className="flex flex-col items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <service.icon className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
                 <CardTitle>{service.title}</CardTitle>
               </CardHeader>
