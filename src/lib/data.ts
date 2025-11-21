@@ -26,29 +26,33 @@ export const navLinks: NavLink[] = [
 ];
 
 export const skills: Skill[] = [
-  { name: "Full-Stack Web Development", level: 90, icon: Code },
-  { name: "UI/UX Design", level: 85, icon: Palette },
-  { name: "Web Design", level: 88, icon: Globe },
-  { name: "Template Design", level: 82, icon: LayoutTemplate },
+  { id: "full-stack-dev", name: "Full-Stack Web Development", level: 90, icon: Code },
+  { id: "ui-ux-design", name: "UI/UX Design", level: 85, icon: Palette },
+  { id: "web-design", name: "Web Design", level: 88, icon: Globe },
+  { id: "template-design", name: "Template Design", level: 82, icon: LayoutTemplate },
 ];
 
 export const services: Service[] = [
   {
+    id: "ui-ux-design",
     title: "UI/UX Design",
     description: "Wireframing, prototyping, and user-centric design.",
     icon: PenTool,
   },
   {
+    id: "web-design",
     title: "Web Design",
     description: "Responsive and modern website layouts.",
     icon: Monitor,
   },
   {
+    id: "full-stack-dev",
     title: "Full-Stack Development",
     description: "Frontend + backend development.",
     icon: Server,
   },
   {
+    id: "template-design",
     title: "Template Design",
     description: "Custom templates for photos, videos, and web use.",
     icon: LayoutTemplate,

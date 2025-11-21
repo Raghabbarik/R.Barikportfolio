@@ -6,12 +6,14 @@ export type NavLink = {
 };
 
 export type Skill = {
+  id: string;
   name: string;
   level: number;
   icon: React.ComponentType<{ className?: string }>;
 };
 
 export type Service = {
+  id: string;
   title: string;
   description: string;
   icon: React.ComponentType<{ className?: string }>;

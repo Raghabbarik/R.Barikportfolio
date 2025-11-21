@@ -48,29 +48,27 @@ import { Trash2 } from "lucide-react";
 import React, { useEffect } from "react";
 
 const formSchema = z.object({
+  id: z.string(),
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   level: z.number().min(0).max(100),
   icon: z.string().min(1, { message: "Icon is required." }),
 });
 
-type SkillFormData = {
-  name: string;
-  level: number;
-  icon: string;
-};
+type SkillFormData = z.infer<typeof formSchema>;
 
 interface SkillFormProps {
   skill: Skill;
   onSave: (skill: Skill) => void;
-  onDelete: (skillName: string) => void;
+  onDelete: (skillId: string) => void;
 }
 
 export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
-    const [isEditing, setIsEditing] = React.useState(skill.name.startsWith('New Skill'));
+    const [isEditing, setIsEditing] = React.useState(skill.id.startsWith('new-skill-'));
 
   const form = useForm<SkillFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+        id: skill.id,
         name: skill.name,
         level: skill.level,
         icon: (skill.icon as any)?.displayName || "PlusCircle",
@@ -78,18 +76,21 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
   });
 
    useEffect(() => {
-    if (!isEditing) {
-        form.reset({
-            name: skill.name,
-            level: skill.level,
-            icon: (skill.icon as any)?.displayName || "PlusCircle",
-        });
+    form.reset({
+        id: skill.id,
+        name: skill.name,
+        level: skill.level,
+        icon: (skill.icon as any)?.displayName || "PlusCircle",
+    });
+     if (skill.id.startsWith('new-skill-')) {
+      setIsEditing(true);
     }
-  }, [skill, form, isEditing]);
+  }, [skill, form]);
 
   async function onSubmit(values: SkillFormData) {
     const skillToSave: Skill = {
         ...values,
+        id: values.id.startsWith('new-skill-') ? values.name.toLowerCase().replace(/\s+/g, '-') + Date.now() : values.id,
         icon: getIcon(values.icon),
     };
     onSave(skillToSave);
@@ -97,10 +98,11 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
   }
 
   const handleCancel = () => {
-    if (skill.name.startsWith('New Skill')) {
-        onDelete(skill.name);
+    if (skill.id.startsWith('new-skill-')) {
+        onDelete(skill.id);
     } else {
         form.reset({
+            id: skill.id,
             name: skill.name,
             level: skill.level,
             icon: (skill.icon as any)?.displayName || "PlusCircle",
@@ -123,7 +125,7 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
                 )}
                  <DeleteSkillAlert 
                     skill={skill} 
-                    onDelete={() => onDelete(skill.name)} 
+                    onDelete={() => onDelete(skill.id)} 
                 />
             </div>
           </CardHeader>
@@ -198,15 +200,9 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
 
 
 function DeleteSkillAlert({ skill, onDelete }: { skill: Skill, onDelete: () => void }) {
-  const { toast } = useToast();
-  
+
   const handleDelete = () => {
     onDelete();
-    toast({
-      variant: "destructive",
-      title: "Skill Deleted",
-      description: `The skill "${skill.name}" has been removed.`,
-    });
   }
 
   return (

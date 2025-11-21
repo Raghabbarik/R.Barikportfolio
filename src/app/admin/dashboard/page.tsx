@@ -35,7 +35,7 @@ function ProjectsTab() {
     const isNew = project.id.startsWith('new-project');
     setProjects((prev) =>
       isNew 
-        ? [project, ...prev.filter(p => p.id !== project.id)]
+        ? prev.map(p => p.id === project.id ? project : p)
         : prev.map((p) => (p.id === project.id ? project : p))
     );
      toast({
@@ -106,11 +106,11 @@ function SkillsTab() {
   const { toast } = useToast();
 
   const handleSave = (skill: Skill) => {
-    const isNew = skill.name.startsWith('New Skill');
+    const isNew = skill.id.startsWith('new-skill-');
     setSkills((prev) =>
       isNew
-        ? [skill, ...prev.filter(s => s.name !== skill.name)]
-        : prev.map((s) => (s.name === skill.name ? skill : s))
+        ? prev.map(s => s.id === skill.id ? skill : s)
+        : prev.map((s) => (s.id === skill.id ? skill : s))
     );
      toast({
       title: "Skill Saved!",
@@ -118,19 +118,19 @@ function SkillsTab() {
     });
   };
 
-  const handleDelete = (skillName: string) => {
-    setSkills((prev) => prev.filter((s) => s.name !== skillName));
+  const handleDelete = (skillId: string) => {
+    setSkills((prev) => prev.filter((s) => s.id !== skillId));
     toast({
       variant: "destructive",
       title: "Skill Deleted",
-      description: `The skill "${skillName}" has been removed.`,
+      description: `The skill has been removed.`,
     });
   };
 
   const handleAdd = () => {
-    const newSkillName = `New Skill ${skills.length + 1}`;
     const newSkill: Skill = {
-      name: newSkillName,
+      id: `new-skill-${Date.now()}`,
+      name: `New Skill ${skills.length + 1}`,
       level: 50,
       icon: PlusCircle,
     };
@@ -161,7 +161,7 @@ function SkillsTab() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {skills.map((skill) => (
           <SkillForm
-            key={skill.name}
+            key={skill.id}
             skill={skill}
             onSave={handleSave}
             onDelete={handleDelete}
@@ -177,11 +177,11 @@ function ServicesTab() {
   const { toast } = useToast();
 
   const handleSave = (service: Service) => {
-    const isNew = service.title.startsWith('New Service');
+    const isNew = service.id.startsWith('new-service-');
     setServices((prev) =>
       isNew
-        ? [service, ...prev.filter(s => s.title !== service.title)]
-        : prev.map((s) => (s.title === service.title ? service : s))
+        ? prev.map(s => s.id === service.id ? service : s)
+        : prev.map((s) => (s.id === service.id ? service : s))
     );
     toast({
       title: "Service Saved!",
@@ -189,17 +189,18 @@ function ServicesTab() {
     });
   };
 
-  const handleDelete = (serviceTitle: string) => {
-    setServices((prev) => prev.filter((s) => s.title !== serviceTitle));
+  const handleDelete = (serviceId: string) => {
+    setServices((prev) => prev.filter((s) => s.id !== serviceId));
      toast({
       variant: "destructive",
       title: "Service Deleted",
-      description: `The service "${serviceTitle}" has been removed.`,
+      description: `The service has been removed.`,
     });
   };
 
   const handleAdd = () => {
     const newService: Service = {
+      id: `new-service-${Date.now()}`,
       title: `New Service ${services.length + 1}`,
       description: "",
       icon: PlusCircle,
@@ -229,7 +230,7 @@ function ServicesTab() {
        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
           <ServiceForm
-            key={service.title}
+            key={service.id}
             service={service}
             onSave={handleSave}
             onDelete={handleDelete}

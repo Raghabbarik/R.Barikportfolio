@@ -48,29 +48,27 @@ import { Trash2 } from "lucide-react";
 import React, { useEffect } from "react";
 
 const formSchema = z.object({
+  id: z.string(),
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
   description: z.string().min(10, { message: "Description must be at least 10 characters." }),
   icon: z.string().min(1, { message: "Icon is required." }),
 });
 
-type ServiceFormData = {
-  title: string;
-  description: string;
-  icon: string;
-};
+type ServiceFormData = z.infer<typeof formSchema>;
 
 interface ServiceFormProps {
   service: Service;
   onSave: (service: Service) => void;
-  onDelete: (serviceTitle: string) => void;
+  onDelete: (serviceId: string) => void;
 }
 
 export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
-  const [isEditing, setIsEditing] = React.useState(service.title.startsWith('New Service'));
+  const [isEditing, setIsEditing] = React.useState(service.id.startsWith('new-service-'));
   
   const form = useForm<ServiceFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+        id: service.id,
         title: service.title,
         description: service.description,
         icon: (service.icon as any)?.displayName || "PlusCircle",
@@ -78,18 +76,21 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
   });
 
   useEffect(() => {
-    if (!isEditing) {
-      form.reset({
-          title: service.title,
-          description: service.description,
-          icon: (service.icon as any)?.displayName || "PlusCircle",
-      });
+    form.reset({
+        id: service.id,
+        title: service.title,
+        description: service.description,
+        icon: (service.icon as any)?.displayName || "PlusCircle",
+    });
+     if (service.id.startsWith('new-service-')) {
+      setIsEditing(true);
     }
-  }, [service, form, isEditing]);
+  }, [service, form]);
 
   const onSubmit = (values: ServiceFormData) => {
     const serviceToSave: Service = {
         ...values,
+        id: values.id.startsWith('new-service-') ? values.title.toLowerCase().replace(/\s+/g, '-') + Date.now() : values.id,
         icon: getIcon(values.icon),
     };
     onSave(serviceToSave);
@@ -97,10 +98,11 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
   };
   
   const handleCancel = () => {
-    if (service.title.startsWith('New Service')) {
-      onDelete(service.title);
+    if (service.id.startsWith('new-service-')) {
+      onDelete(service.id);
     } else {
       form.reset({
+        id: service.id,
         title: service.title,
         description: service.description,
         icon: (service.icon as any)?.displayName || "PlusCircle",
@@ -124,7 +126,7 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
                 )}
                 <DeleteServiceAlert 
                     service={service} 
-                    onDelete={() => onDelete(service.title)} 
+                    onDelete={() => onDelete(service.id)} 
                 />
             </div>
           </CardHeader>
@@ -194,15 +196,9 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
 
 
 function DeleteServiceAlert({ service, onDelete }: { service: Service, onDelete: () => void }) {
-  const { toast } = useToast();
   
   const handleDelete = () => {
     onDelete();
-    toast({
-      variant: "destructive",
-      title: "Service Deleted",
-      description: `The service "${service.title}" has been removed.`,
-    });
   }
 
   return (
