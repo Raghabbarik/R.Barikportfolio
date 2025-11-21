@@ -480,7 +480,7 @@ class Y extends MeshPhysicalMaterial {
 }
 
 const XConfig = {
-  count: 200,
+  count: 100,
   colors: [0x64B5F6, 0xBB86FC, 0x64B5F6], // Soft neon blue, subtle purple
   ambientColor: 0xffffff,
   ambientIntensity: 1,
@@ -874,4 +874,3 @@ const BallpitBackground: React.FC<BallpitProps> = ({ className = '', followCurso
 };
 
 export default BallpitBackground;
-
