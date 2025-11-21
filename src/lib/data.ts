@@ -4,7 +4,6 @@ import {
   PenTool,
   Monitor,
   LayoutTemplate,
-  Camera,
   Mail,
   Phone,
   Linkedin,
@@ -12,8 +11,7 @@ import {
   MapPin,
   Palette,
   Server,
-  Database,
-  Clapperboard,
+  Globe,
 } from "lucide-react";
 
 export const navLinks: NavLink[] = [
@@ -25,11 +23,10 @@ export const navLinks: NavLink[] = [
 ];
 
 export const skills: Skill[] = [
-  { name: "Full-Stack Web Development", icon: Code },
-  { name: "UI/UX Design", icon: Palette },
-  { name: "Web Design", icon: Monitor },
-  { name: "Template Design", icon: LayoutTemplate },
-  { name: "Photo & Video Template Creation", icon: Clapperboard },
+  { name: "Full-Stack Web Development", level: 90, icon: Code },
+  { name: "UI/UX Design", level: 85, icon: Palette },
+  { name: "Web Design", level: 88, icon: Globe },
+  { name: "Template Design", level: 82, icon: LayoutTemplate },
 ];
 
 export const services: Service[] = [

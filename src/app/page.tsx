@@ -1,6 +1,7 @@
 import Header from "@/components/header";
 import HeroSection from "@/components/sections/hero";
 import AboutSection from "@/components/sections/about";
+import SkillsSection from "@/components/sections/skills";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <main className="flex-1">
         <HeroSection />
         <AboutSection />
+        <SkillsSection />
       </main>
     </div>
   );

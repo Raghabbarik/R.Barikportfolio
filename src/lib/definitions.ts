@@ -5,6 +5,7 @@ export type NavLink = {
 
 export type Skill = {
   name: string;
+  level: number;
   icon: React.ComponentType<{ className?: string }>;
 };
 
