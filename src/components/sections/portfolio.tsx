@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { projects } from "@/lib/data";
+import { useData } from "@/lib/data-context";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import {
   Card,
@@ -15,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 
 export default function PortfolioSection() {
+  const { projects } = useData();
   return (
     <section id="portfolio" className="w-full py-16 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">

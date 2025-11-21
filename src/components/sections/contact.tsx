@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { contactDetails } from "@/lib/data";
+import { useData } from "@/lib/data-context";
 import { getIcon } from "@/lib/get-icon";
 import { ContactForm } from "@/components/contact-form";
 
 export default function ContactSection() {
+  const { contactDetails } = useData();
   return (
     <section
       id="contact"

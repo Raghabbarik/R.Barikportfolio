@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { contactDetails } from "@/lib/data";
+import { useData } from "@/lib/data-context";
 import { getIcon } from "@/lib/get-icon";
 
 export default function Footer() {
+  const { contactDetails } = useData();
   return (
     <footer className="w-full bg-card py-6">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 md:flex-row md:px-6">

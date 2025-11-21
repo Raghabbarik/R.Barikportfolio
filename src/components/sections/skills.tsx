@@ -1,8 +1,11 @@
-import { skills } from "@/lib/data";
+"use client";
+
+import { useData } from "@/lib/data-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 export default function SkillsSection() {
+  const { skills } = useData();
   return (
     <section id="skills" className="w-full py-16 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">

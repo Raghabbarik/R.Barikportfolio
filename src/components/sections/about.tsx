@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   Card,
@@ -6,10 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { about } from "@/lib/data";
+import { useData } from "@/lib/data-context";
 import { Briefcase, GraduationCap } from "lucide-react";
 
 export default function AboutSection() {
+  const { about } = useData();
   const aboutImage = PlaceHolderImages.find((img) => img.id === "about-image");
 
   return (

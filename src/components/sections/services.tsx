@@ -1,7 +1,10 @@
-import { services } from "@/lib/data";
+"use client";
+
+import { useData } from "@/lib/data-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ServicesSection() {
+  const { services } = useData();
   return (
     <section id="services" className="w-full py-16 md:py-24 lg:py-32 bg-card">
       <div className="container px-4 md:px-6">
