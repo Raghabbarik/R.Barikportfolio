@@ -112,10 +112,10 @@ function DockLabel({ children, className = '', isHovered }: DockLabelProps) {
       {isVisible && (
         <motion.div
           initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: -10 }}
+          animate={{ opacity: 1, y: 10 }}
           exit={{ opacity: 0, y: 0 }}
           transition={{ duration: 0.2 }}
-          className={`${className} absolute -top-6 left-1/2 w-fit whitespace-pre rounded-md border border-border/50 bg-card px-2 py-0.5 text-xs text-foreground`}
+          className={`${className} absolute -bottom-6 left-1/2 w-fit whitespace-pre rounded-md border border-border/50 bg-card px-2 py-0.5 text-xs text-foreground`}
           role="tooltip"
           style={{ x: '-50%' }}
         >
@@ -154,7 +154,7 @@ export default function Dock({
   const height = useSpring(heightRow, spring);
 
   return (
-    <motion.div style={{ height, scrollbarWidth: 'none' }} className="fixed bottom-0 left-0 right-0 z-50 mx-auto flex max-w-full items-end justify-center">
+    <motion.div style={{ height, scrollbarWidth: 'none' }} className="fixed top-0 left-0 right-0 z-50 mx-auto flex max-w-full items-start justify-center">
       <motion.div
         onMouseMove={({ pageX }) => {
           isHovered.set(1);
@@ -164,7 +164,7 @@ export default function Dock({
           isHovered.set(0);
           mouseX.set(Infinity);
         }}
-        className={`${className} flex items-end gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md pb-2 px-4 shadow-2xl`}
+        className={`${className} flex items-start gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md pt-2 px-4 shadow-2xl`}
         style={{ height: panelHeight }}
         role="toolbar"
         aria-label="Application dock"
