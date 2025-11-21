@@ -1,7 +1,5 @@
-import Link from "next/link";
-import { ArrowUpRight, Briefcase, Star, Sparkles, User } from "lucide-react";
+"use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,14 +7,53 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { projects } from "@/lib/data";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PortfolioTable } from "@/components/admin/portfolio-table";
+import { ProjectFormDialog } from "@/components/admin/project-form-dialog";
+import { PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const summaryItems = [
-    { title: "Portfolio Projects", count: projects.length, icon: Briefcase, href: "/admin/dashboard/portfolio" },
-    { title: "About Section", count: 1, icon: User, href: "#" },
-    { title: "Skills", count: 5, icon: Star, href: "#" },
-    { title: "Services", count: 4, icon: Sparkles, href: "#" },
-];
+function ProjectsTab() {
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Projects</CardTitle>
+                    <CardDescription>Add, edit, or remove projects from your portfolio.</CardDescription>
+                </div>
+                <ProjectFormDialog>
+                    <Button size="sm" className="h-8 gap-1">
+                        <PlusCircle className="h-3.5 w-3.5" />
+                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                            Add Project
+                        </span>
+                    </Button>
+                </ProjectFormDialog>
+            </CardHeader>
+            <CardContent>
+                <PortfolioTable />
+            </CardContent>
+        </Card>
+    );
+}
+
+function ComingSoonTab({ title }: { title: string }) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>{title}</CardTitle>
+                <CardDescription>
+                    This section is under construction. Soon you'll be able to manage your {title.toLowerCase()} here.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="flex items-center justify-center h-48 border-2 border-dashed rounded-lg">
+                    <p className="text-muted-foreground">Coming Soon!</p>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
 
 
 export default function DashboardPage() {
@@ -24,46 +61,37 @@ export default function DashboardPage() {
     <div className="flex flex-col gap-4">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-          Welcome, Admin!
+          Admin Dashboard
         </h1>
         <p className="text-muted-foreground md:text-xl/relaxed">
-          Here's an overview of your portfolio content.
+          Manage your portfolio content here.
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-        {summaryItems.map((item) => (
-          <Card key={item.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {item.title}
-              </CardTitle>
-              <item.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{item.count}</div>
-              <Link href={item.href} className="text-xs text-muted-foreground hover:text-primary">
-                Manage {item.title}
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <Card>
-        <CardHeader className="flex flex-row items-center">
-          <div className="grid gap-2">
-            <CardTitle>Portfolio Management</CardTitle>
-            <CardDescription>
-              Add, edit, or delete your portfolio projects.
-            </CardDescription>
-          </div>
-          <Button asChild size="sm" className="ml-auto gap-1">
-            <Link href="/admin/dashboard/portfolio">
-              Go to Portfolio
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </CardHeader>
-      </Card>
+
+      <Tabs defaultValue="projects" className="w-full">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="projects">Projects</TabsTrigger>
+          <TabsTrigger value="skills">Skills</TabsTrigger>
+          <TabsTrigger value="services">Services</TabsTrigger>
+          <TabsTrigger value="about">About</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+        </TabsList>
+        <TabsContent value="projects" className="mt-4">
+            <ProjectsTab />
+        </TabsContent>
+        <TabsContent value="skills" className="mt-4">
+            <ComingSoonTab title="Skills" />
+        </TabsContent>
+        <TabsContent value="services" className="mt-4">
+            <ComingSoonTab title="Services" />
+        </TabsContent>
+        <TabsContent value="about" className="mt-4">
+            <ComingSoonTab title="About" />
+        </TabsContent>
+        <TabsContent value="settings" className="mt-4">
+            <ComingSoonTab title="Settings" />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

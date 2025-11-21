@@ -1,13 +1,8 @@
 import Link from "next/link";
 import {
   Home,
-  Package,
   Settings,
-  User,
   PanelLeft,
-  Briefcase,
-  Star,
-  Sparkles,
   Mountain,
   LogOut,
 } from "lucide-react";
@@ -27,11 +22,7 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/admin/dashboard", icon: Home, label: "Dashboard" },
-  { href: "/admin/dashboard/portfolio", icon: Briefcase, label: "Portfolio" },
-  { href: "#", icon: User, label: "About" },
-  { href: "#", icon: Star, label: "Skills" },
-  { href: "#", icon: Sparkles, label: "Services" },
-  { href: "#", icon: Settings, label: "Settings" },
+  { href: "/admin/dashboard", icon: Settings, label: "Settings" },
 ];
 
 export default function DashboardLayout({
@@ -51,7 +42,7 @@ export default function DashboardLayout({
             <span className="sr-only">PortfolioPro</span>
           </Link>
           <TooltipProvider>
-            {navItems.slice(0, -1).map((item) => (
+            {navItems.map((item) => (
               <Tooltip key={item.label}>
                 <TooltipTrigger asChild>
                   <Link
@@ -112,6 +103,13 @@ export default function DashboardLayout({
                     {item.label}
                   </Link>
                 ))}
+                 <Link
+                    href="/admin"
+                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    Logout
+                  </Link>
               </nav>
             </SheetContent>
           </Sheet>
