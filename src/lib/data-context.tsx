@@ -10,6 +10,7 @@ import {
   about as initialAbout,
   contactDetails as initialContactDetails,
 } from '@/lib/data';
+import { getIcon } from '@/lib/get-icon';
 
 interface DataContextType {
   projects: Project[];
@@ -27,6 +28,16 @@ interface DataContextType {
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
+// Helper to rehydrate icons which are not stored in JSON
+const rehydrateSkills = (savedSkills: Omit<Skill, 'icon'>[]): Skill[] => {
+  return savedSkills.map(skill => ({ ...skill, icon: getIcon(skill.name) }));
+};
+
+const rehydrateServices = (savedServices: Omit<Service, 'icon'>[]): Service[] => {
+  return savedServices.map(service => ({ ...service, icon: getIcon(service.title) }));
+};
+
+
 export function DataProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [skills, setSkills] = useState<Skill[]>(initialSkills);
@@ -40,25 +51,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const savedData = localStorage.getItem('portfolio-data');
       if (savedData) {
         const parsedData = JSON.parse(savedData);
-        // We need to re-assign the icon components as they are not stored in JSON
-        if (parsedData.skills) {
-          const skillsWithIcons = initialSkills.map(is => {
-            const savedSkill = parsedData.skills.find((ss: Skill) => ss.name === is.name);
-            return savedSkill ? { ...savedSkill, icon: is.icon } : is;
-          });
-           const newSkills = parsedData.skills.filter((ss: Skill) => !initialSkills.some(is => is.name === ss.name));
-           setSkills([...skillsWithIcons, ...newSkills]);
-        }
-        if (parsedData.services) {
-            const servicesWithIcons = initialServices.map(is => {
-                const savedService = parsedData.services.find((ss: Service) => ss.title === is.title);
-                return savedService ? { ...savedService, icon: is.icon } : is;
-            });
-            const newServices = parsedData.services.filter((ss: Service) => !initialServices.some(is => is.title === ss.title));
-            setServices([...servicesWithIcons, ...newServices]);
-        }
-
         if (parsedData.projects) setProjects(parsedData.projects);
+        if (parsedData.skills) setSkills(rehydrateSkills(parsedData.skills));
+        if (parsedData.services) setServices(rehydrateServices(parsedData.services));
         if (parsedData.about) setAbout(parsedData.about);
         if (parsedData.contactDetails) setContactDetails(parsedData.contactDetails);
       }
@@ -75,8 +70,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const dataToSave = {
         projects,
         // Remove icon components before saving to prevent circular JSON error
-        skills: skills.map(({ icon, ...rest }) => rest), 
-        services: services.map(({ icon, ...rest }) => rest),
+        skills: skills.map(({ icon, ...rest }) => ({...rest, icon: (icon as any).displayName})), 
+        services: services.map(({ icon, ...rest }) => ({...rest, icon: (icon as any).displayName})),
         about,
         contactDetails
     };

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,7 +73,7 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
     defaultValues: {
         name: skill.name,
         level: skill.level,
-        icon: skill.icon?.displayName || "PlusCircle",
+        icon: (skill.icon as any)?.displayName || "PlusCircle",
     },
   });
 
@@ -81,7 +82,7 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
         form.reset({
             name: skill.name,
             level: skill.level,
-            icon: skill.icon?.displayName || "PlusCircle",
+            icon: (skill.icon as any)?.displayName || "PlusCircle",
         });
     }
   }, [skill, form, isEditing]);
@@ -102,7 +103,7 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
         form.reset({
             name: skill.name,
             level: skill.level,
-            icon: skill.icon?.displayName || "PlusCircle",
+            icon: (skill.icon as any)?.displayName || "PlusCircle",
         });
         setIsEditing(false);
     }

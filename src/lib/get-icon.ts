@@ -1,3 +1,4 @@
+
 import {
   Code,
   PenTool,
@@ -34,6 +35,13 @@ const iconMap: IconMap = {
   Briefcase,
   GraduationCap,
   PlusCircle,
+  // Add skill names to map to icons
+  "Full-Stack Web Development": Code,
+  "UI/UX Design": Palette,
+  "Web Design": Globe,
+  "Template Design": LayoutTemplate,
+  // Add service titles to map to icons
+  "Full-Stack Development": Server,
 };
 
 export const getIcon = (name: string): LucideIcon => {

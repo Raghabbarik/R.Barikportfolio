@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,7 +73,7 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
     defaultValues: {
         title: service.title,
         description: service.description,
-        icon: service.icon?.displayName || "PlusCircle",
+        icon: (service.icon as any)?.displayName || "PlusCircle",
     },
   });
 
@@ -81,7 +82,7 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
       form.reset({
           title: service.title,
           description: service.description,
-          icon: service.icon?.displayName || "PlusCircle",
+          icon: (service.icon as any)?.displayName || "PlusCircle",
       });
     }
   }, [service, form, isEditing]);
@@ -102,7 +103,7 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
       form.reset({
         title: service.title,
         description: service.description,
-        icon: service.icon?.displayName || "PlusCircle",
+        icon: (service.icon as any)?.displayName || "PlusCircle",
       });
       setIsEditing(false);
     }
