@@ -29,9 +29,9 @@ const PillNav: React.FC<PillNavProps> = ({
   items,
   className = '',
   ease = 'power3.easeOut',
-  baseColor = '#fff',
-  pillColor = '#121212',
-  hoveredPillTextColor = '#fff',
+  baseColor = 'hsl(var(--primary))',
+  pillColor = 'hsl(var(--background))',
+  hoveredPillTextColor = 'hsl(var(--primary-foreground))',
   pillTextColor,
   onMobileMenuClick,
   initialLoadAnimation = true
@@ -357,13 +357,6 @@ const PillNav: React.FC<PillNavProps> = ({
                       {item.label}
                     </span>
                   </span>
-                  {isActive && (
-                    <span
-                      className="absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-3 h-3 rounded-full z-[4]"
-                      style={{ background: 'var(--base, #000)' }}
-                      aria-hidden="true"
-                    />
-                  )}
                 </>
               );
 
@@ -466,5 +459,5 @@ const PillNav: React.FC<PillNavProps> = ({
 
 
 export default function Header() {
-    return <PillNav items={navLinks} pillColor='#BB86FC' baseColor='#64B5F6' pillTextColor='#121212' hoveredPillTextColor='#fff'/>
+    return <PillNav items={navLinks} pillColor='hsl(var(--background))' baseColor='hsl(var(--primary))' pillTextColor='hsl(var(--foreground))' hoveredPillTextColor='hsl(var(--primary-foreground))'/>
 }
