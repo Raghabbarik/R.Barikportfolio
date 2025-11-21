@@ -14,30 +14,42 @@ export default function AboutSection() {
   return (
     <section id="about" className="w-full py-16 md:py-24 lg:py-32 bg-card">
       <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2 lg:gap-20">
+        <div className="relative h-full min-h-[400px] lg:min-h-[500px]">
+          {aboutImage && (
+            <Image
+              src={aboutImage.imageUrl}
+              alt={aboutImage.description}
+              data-ai-hint={aboutImage.imageHint}
+              fill
+              className="rounded-lg object-cover shadow-lg"
+            />
+          )}
+        </div>
         <div className="space-y-6">
           <div className="space-y-3">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline">
-              About Me
+            <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">About Me</div>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              A little bit about me
             </h2>
-            <p className="text-muted-foreground md:text-lg">
+            <p className="max-w-[600px] text-muted-foreground md:text-lg/relaxed">
               My name is Raghab Barik. I am a full-stack web developer and UI/UX
               designer currently pursuing my B.Tech (2nd year) at Nalanda
               Institute of Technology, Bhubaneswar. Alongside my studies, I also
               work with Stoup as a website developer.
             </p>
           </div>
-          <div className="grid gap-6">
+          <div className="grid gap-6 sm:grid-cols-2">
             <Card>
               <CardHeader className="flex flex-row items-center gap-4">
                 <GraduationCap className="w-8 h-8 text-primary" />
                 <CardTitle>Education</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-1">
                 <p className="font-semibold">
-                  B.Tech (Ongoing), Nalanda Institute of Technology, Bhubaneswar
+                  B.Tech, 2nd Year
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Current Year: 2nd Year
+                  Nalanda Institute of Technology, Bhubaneswar
                 </p>
               </CardContent>
             </Card>
@@ -46,23 +58,12 @@ export default function AboutSection() {
                 <Briefcase className="w-8 h-8 text-primary" />
                 <CardTitle>Professional Highlight</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="font-semibold">Website Developer at Stoup</p>
+              <CardContent className="space-y-1">
+                <p className="font-semibold">Website Developer</p>
+                 <p className="text-sm text-muted-foreground">at Stoup</p>
               </CardContent>
             </Card>
           </div>
-        </div>
-        <div className="relative h-full min-h-[400px] lg:min-h-[500px]">
-          {aboutImage && (
-            <Image
-              src={aboutImage.imageUrl}
-              alt={aboutImage.description}
-              data-ai-hint={aboutImage.imageHint}
-              fill
-              className="rounded-lg object-cover shadow-lg transform transition-transform duration-500 hover:scale-105"
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
         </div>
       </div>
     </section>
