@@ -1,14 +1,21 @@
+
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Hand } from "lucide-react";
 import BallpitBackground from "@/components/ballpit-background";
+import { useData } from "@/lib/data-context";
 
 export default function HeroSection() {
   const profilePic = PlaceHolderImages.find(
     (img) => img.id === "profile-picture"
   );
+
+  const { about } = useData();
+  const firstName = about.description.split(" ")[2] || "Raghab";
 
   return (
     <section id="hero" className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
@@ -20,7 +27,7 @@ export default function HeroSection() {
               <div className="flex flex-col items-center md:items-start text-center md:text-left gap-6">
                 <div className="flex items-center gap-2 bg-accent/50 border border-border rounded-full px-4 py-1.5 text-sm">
                     <Hand className="h-5 w-5 text-primary animate-bounce"/>
-                    <span>Hey, I'm Raghab</span>
+                    <span>Hey, I'm {firstName}</span>
                 </div>
                 <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Full-Stack</span>
