@@ -30,7 +30,7 @@ export default function HeroSection() {
                     Crafting modern digital experiences with clean design and powerful functionality.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <Button asChild size="lg" className="bg-primary/90 hover:bg-primary">
+                    <Button asChild size="lg">
                         <Link href="#contact">Get In Touch</Link>
                     </Button>
                     <Button asChild variant="outline" size="lg" className="bg-transparent border-primary/50 hover:bg-primary/10 hover:text-primary-foreground">
