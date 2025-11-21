@@ -11,6 +11,7 @@ import {
   contactDetails as initialContactDetails,
 } from '@/lib/data';
 import { getIcon } from '@/lib/get-icon';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DataContextType {
   projects: Project[];
@@ -24,17 +25,18 @@ interface DataContextType {
   contactDetails: ContactDetail[];
   setContactDetails: React.Dispatch<React.SetStateAction<ContactDetail[]>>;
   saveAllData: () => Promise<void>;
+  isDataLoaded: boolean;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 // Helper to rehydrate icons which are not stored in JSON
-const rehydrateSkills = (savedSkills: Omit<Skill, 'icon'>[]): Skill[] => {
-  return savedSkills.map(skill => ({ ...skill, icon: getIcon(skill.name) }));
+const rehydrateSkills = (savedSkills: any[]): Skill[] => {
+  return savedSkills.map(skill => ({ ...skill, icon: getIcon(skill.icon) }));
 };
 
-const rehydrateServices = (savedServices: Omit<Service, 'icon'>[]): Service[] => {
-  return savedServices.map(service => ({ ...service, icon: getIcon(service.title) }));
+const rehydrateServices = (savedServices: any[]): Service[] => {
+  return savedServices.map(service => ({ ...service, icon: getIcon(service.icon) }));
 };
 
 
@@ -59,6 +61,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to load data from localStorage", error);
+      // If loading fails, we still proceed with initial data
     } finally {
         setIsDataLoaded(true);
     }
@@ -70,21 +73,39 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const dataToSave = {
         projects,
         // Remove icon components before saving to prevent circular JSON error
-        skills: skills.map(({ icon, ...rest }) => ({...rest, icon: (icon as any).displayName})), 
-        services: services.map(({ icon, ...rest }) => ({...rest, icon: (icon as any).displayName})),
+        skills: skills.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName || rest.name})), 
+        services: services.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName || rest.title})),
         about,
         contactDetails
     };
+
     console.log("Saving all data...", dataToSave);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    console.log("Data saved successfully!");
-    localStorage.setItem('portfolio-data', JSON.stringify(dataToSave));
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    try {
+      localStorage.setItem('portfolio-data', JSON.stringify(dataToSave));
+      console.log("Data saved successfully!");
+    } catch (error) {
+      console.error("Failed to save data to localStorage", error);
+      throw error; // Re-throw to be caught by the calling function
+    }
   }, [projects, skills, services, about, contactDetails]);
 
 
-  // Render children only after data has been loaded to prevent flash of initial content
+  // Render a loader or skeleton while data is loading to prevent flash of initial content
   if (!isDataLoaded) {
-    return null; 
+    return (
+      <div className="w-full min-h-screen bg-background p-8">
+        <div className="space-y-8">
+          <Skeleton className="h-32 w-full" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Skeleton className="h-64 w-full" />
+            <Skeleton className="h-64 w-full" />
+            <Skeleton className="h-64 w-full" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -101,6 +122,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         contactDetails,
         setContactDetails,
         saveAllData,
+        isDataLoaded,
       }}
     >
       {children}

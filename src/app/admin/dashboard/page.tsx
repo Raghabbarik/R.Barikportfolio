@@ -29,15 +29,28 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 function ProjectsTab() {
   const { projects, setProjects } = useData();
+  const { toast } = useToast();
 
   const handleSave = (project: Project) => {
+    const isNew = project.id.startsWith('new-project');
     setProjects((prev) =>
-      prev.map((p) => (p.id === project.id ? project : p))
+      isNew 
+        ? [project, ...prev.filter(p => p.id !== project.id)]
+        : prev.map((p) => (p.id === project.id ? project : p))
     );
+     toast({
+      title: "Project Saved!",
+      description: `The project "${project.title}" has been updated.`,
+    });
   };
 
   const handleDelete = (projectId: string) => {
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
+    toast({
+      variant: "destructive",
+      title: "Project Deleted",
+      description: "The project has been removed.",
+    });
   };
 
   const handleAdd = () => {
@@ -46,10 +59,15 @@ function ProjectsTab() {
       title: "New Project",
       description: "",
       technologies: [],
-      imageUrl: "new-project-placeholder",
+      imageUrl: `new-project-${Date.now()}`,
       imageHint: "new project",
+      liveDemoUrl: "",
     };
     setProjects((prev) => [newProject, ...prev]);
+    toast({
+        title: "New Project Added",
+        description: "You can now edit the new project's details.",
+    });
   };
 
   return (
@@ -85,22 +103,42 @@ function ProjectsTab() {
 
 function SkillsTab() {
   const { skills, setSkills } = useData();
+  const { toast } = useToast();
 
   const handleSave = (skill: Skill) => {
-    setSkills((prev) => prev.map((s) => (s.name === skill.name ? skill : s)));
+    const isNew = skill.name.startsWith('New Skill');
+    setSkills((prev) =>
+      isNew
+        ? [skill, ...prev.filter(s => s.name !== skill.name)]
+        : prev.map((s) => (s.name === skill.name ? skill : s))
+    );
+     toast({
+      title: "Skill Saved!",
+      description: `The skill "${skill.name}" has been updated.`,
+    });
   };
 
   const handleDelete = (skillName: string) => {
     setSkills((prev) => prev.filter((s) => s.name !== skillName));
+    toast({
+      variant: "destructive",
+      title: "Skill Deleted",
+      description: `The skill "${skillName}" has been removed.`,
+    });
   };
 
   const handleAdd = () => {
+    const newSkillName = `New Skill ${skills.length + 1}`;
     const newSkill: Skill = {
-      name: `New Skill ${skills.length + 1}`,
+      name: newSkillName,
       level: 50,
       icon: PlusCircle,
     };
     setSkills((prev) => [newSkill, ...prev]);
+    toast({
+        title: "New Skill Added",
+        description: "You can now edit the new skill's details.",
+    });
   };
 
   return (
@@ -136,15 +174,28 @@ function SkillsTab() {
 
 function ServicesTab() {
   const { services, setServices } = useData();
+  const { toast } = useToast();
 
   const handleSave = (service: Service) => {
+    const isNew = service.title.startsWith('New Service');
     setServices((prev) =>
-      prev.map((s) => (s.title === service.title ? service : s))
+      isNew
+        ? [service, ...prev.filter(s => s.title !== service.title)]
+        : prev.map((s) => (s.title === service.title ? service : s))
     );
+    toast({
+      title: "Service Saved!",
+      description: `The service "${service.title}" has been updated.`,
+    });
   };
 
   const handleDelete = (serviceTitle: string) => {
     setServices((prev) => prev.filter((s) => s.title !== serviceTitle));
+     toast({
+      variant: "destructive",
+      title: "Service Deleted",
+      description: `The service "${serviceTitle}" has been removed.`,
+    });
   };
 
   const handleAdd = () => {
@@ -154,6 +205,10 @@ function ServicesTab() {
       icon: PlusCircle,
     };
     setServices((prev) => [newService, ...prev]);
+    toast({
+        title: "New Service Added",
+        description: "You can now edit the new service's details.",
+    });
   };
 
   return (
@@ -207,11 +262,16 @@ function AboutTab() {
 
 function SettingsTab() {
   const { contactDetails, setContactDetails } = useData();
+  const { toast } = useToast();
 
   const handleSave = (contact: ContactDetail) => {
     setContactDetails((prev) =>
       prev.map((c) => (c.id === contact.id ? contact : c))
     );
+     toast({
+      title: "Contact Detail Saved!",
+      description: `The detail for "${contact.text}" has been updated.`,
+    });
   };
 
   const handleDelete = (contactId: string) => {
@@ -226,6 +286,10 @@ function SettingsTab() {
       href: "mailto:new.contact@example.com",
     };
     setContactDetails((prev) => [newContact, ...prev]);
+     toast({
+        title: "New Contact Added",
+        description: "You can now edit the new contact's details.",
+    });
   };
 
   return (

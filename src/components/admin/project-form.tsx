@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -72,24 +71,26 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
     },
   });
 
-  // Keep form in sync with external changes if not editing
   useEffect(() => {
-    if (!isEditing) {
-      form.reset({
-        id: project.id,
-        title: project.title,
-        description: project.description,
-        technologies: project.technologies.join(", "),
-        liveDemoUrl: project.liveDemoUrl,
-        imageUrl: project.imageUrl,
-        imageHint: project.imageHint,
-      });
+    form.reset({
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      technologies: project.technologies.join(", "),
+      liveDemoUrl: project.liveDemoUrl,
+      imageUrl: project.imageUrl,
+      imageHint: project.imageHint,
+    });
+    // If it's a new project, keep it in editing mode
+    if (project.id.startsWith('new-project-')) {
+      setIsEditing(true);
     }
-  }, [project, form, isEditing]);
+  }, [project, form]);
 
   const onSubmit = (values: ProjectFormData) => {
     const projectToSave: Project = {
         ...values,
+        id: values.id.startsWith('new-project-') ? project.title.toLowerCase().replace(/\s+/g, '-') : values.id,
         technologies: values.technologies.split(",").map(t => t.trim()),
     };
     onSave(projectToSave);
@@ -115,9 +116,9 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
           <CardHeader className="flex flex-row items-start justify-between">
             <div>
               <CardTitle>{isEditing ? "Edit Project" : project.title}</CardTitle>
-              {!isEditing && <CardDescription className="truncate">{project.description}</CardDescription>}
+              {!isEditing && <CardDescription className="line-clamp-2">{project.description}</CardDescription>}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
                 {!isEditing && (
                     <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit</Button>
                 )}
@@ -174,9 +175,9 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
                     name="imageUrl"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Image URL</FormLabel>
+                        <FormLabel>Image Placeholder ID</FormLabel>
                         <FormControl>
-                            <Input placeholder="https://images.unsplash.com/..." {...field} />
+                            <Input placeholder="e.g., 'wonderlight-project'" {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -187,7 +188,7 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
                     name="imageHint"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Image Hint</FormLabel>
+                        <FormLabel>Image AI Hint</FormLabel>
                         <FormControl>
                             <Input placeholder="e.g. 'adventure website'" {...field} />
                         </FormControl>
@@ -223,15 +224,9 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
 
 
 function DeleteProjectAlert({ project, onDelete }: { project: Project, onDelete: () => void }) {
-  const { toast } = useToast();
   
   const handleDelete = () => {
     onDelete();
-    toast({
-      variant: "destructive",
-      title: "Project Deleted",
-      description: `The project "${project.title}" has been removed.`,
-    });
   }
 
   return (
