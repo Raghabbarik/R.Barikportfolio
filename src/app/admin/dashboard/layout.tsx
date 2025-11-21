@@ -60,7 +60,7 @@ export default function DashboardLayout({
           </TooltipProvider>
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-           <TooltipProvider>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -118,20 +118,20 @@ export default function DashboardLayout({
                     {item.label}
                   </Link>
                 ))}
-                 <Link
-                    href="/"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                    Back to Home
-                  </Link>
-                 <Link
-                    href="/admin"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    Logout
-                  </Link>
+                <Link
+                  href="/"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  Back to Home
+                </Link>
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Logout
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
