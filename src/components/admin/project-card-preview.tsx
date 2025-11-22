@@ -21,6 +21,17 @@ interface ProjectCardPreviewProps {
   project: Project;
 }
 
+function isValidHttpUrl(string: string | undefined) {
+  if (!string) return false;
+  let url;
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
 export function ProjectCardPreview({ project }: ProjectCardPreviewProps) {
   const { isDataLoaded } = useData();
 
@@ -32,10 +43,12 @@ export function ProjectCardPreview({ project }: ProjectCardPreviewProps) {
     );
   }
 
+  const hasValidImage = isValidHttpUrl(project.imageUrl);
+
   return (
     <Card className="overflow-hidden border border-border/20 flex flex-col">
       <div className="relative group aspect-video bg-muted">
-        {project.imageUrl && project.imageUrl.length > 0 ? (
+        {hasValidImage ? (
           <Image
             src={project.imageUrl}
             alt={project.title}
