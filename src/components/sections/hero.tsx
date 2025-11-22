@@ -7,21 +7,33 @@ import { Hand } from "lucide-react";
 import BallpitBackground from "@/components/ballpit-background";
 import { useData } from "@/lib/data-context";
 import { Skeleton } from "../ui/skeleton";
+import { useEffect, useState } from "react";
 
 function isValidHttpUrl(string: string | undefined) {
-  if (!string) return false;
-  try {
-    const url = new URL(string);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch (_) {
-    return string.startsWith('data:image/');
-  }
+    if (!string) return false;
+    // Check for data URIs or valid http/https urls
+    if (string.startsWith('data:image/') || string.startsWith('http://') || string.startsWith('https://')) {
+        try {
+            // Further validation for http urls to ensure they are well-formed
+            if(string.startsWith('http')) new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+    return false;
 }
+
 
 export default function HeroSection() {
   const { about, isDataLoaded } = useData();
-  
-  if (!isDataLoaded) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient || !isDataLoaded) {
     return (
       <section id="hero" className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
         <Skeleton className="h-full w-full" />

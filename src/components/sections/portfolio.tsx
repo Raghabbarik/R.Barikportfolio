@@ -16,30 +16,33 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import { useEffect, useState } from "react";
 
 function isValidHttpUrl(string: string | undefined) {
-  if (!string) return false;
-    // Simple check for image file extensions.
-  if (/\.(jpeg|jpg|gif|png|webp)$/.test(string.toLowerCase())) {
-    try {
-        const url = new URL(string);
-        return url.protocol === "http:" || url.protocol === "https:";
-    } catch (_) {
-        return false;
+    if (!string) return false;
+    // Check for data URIs or valid http/https urls
+    if (string.startsWith('data:image/') || string.startsWith('http://') || string.startsWith('https://')) {
+        try {
+            // Further validation for http urls to ensure they are well-formed
+            if(string.startsWith('http')) new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
     }
-  }
-  // Check for data URIs
-  if (string.startsWith('data:image/')) {
-    return true;
-  }
-  return false;
+    return false;
 }
 
 
 export default function PortfolioSection() {
   const { projects, isDataLoaded } = useData();
+  const [isClient, setIsClient] = useState(false);
 
-  if (!isDataLoaded) {
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient || !isDataLoaded) {
     return (
        <section id="portfolio" className="w-full py-16 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">

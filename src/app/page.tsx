@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import Header from "@/components/header";
+import { useData } from "@/lib/data-context";
 
 const sectionClasses = "w-full py-16 md:py-24 lg:py-32";
 const SectionSkeleton = () => (
@@ -24,6 +25,7 @@ const PortfolioSection = dynamic(() => import('@/components/sections/portfolio')
 const ContactSection = dynamic(() => import('@/components/sections/contact'), { ssr: false, loading: () => <SectionSkeleton /> });
 
 export default function Home() {
+    const { isDataLoaded } = useData();
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -34,7 +36,7 @@ export default function Home() {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background">
       <main className="flex-1">
-        {isClient ? (
+        {isClient && isDataLoaded ? (
             <>
                 <Header />
                 <HeroSection />

@@ -14,13 +14,18 @@ import { Briefcase, GraduationCap } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 
 function isValidHttpUrl(string: string | undefined) {
-  if (!string) return false;
-  try {
-    const url = new URL(string);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch (_) {
-    return string.startsWith('data:image/');
-  }
+    if (!string) return false;
+    // Check for data URIs or valid http/https urls
+    if (string.startsWith('data:image/') || string.startsWith('http://') || string.startsWith('https://')) {
+        try {
+            // Further validation for http urls to ensure they are well-formed
+            if(string.startsWith('http')) new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+    return false;
 }
 
 function AboutSectionContent() {
@@ -103,6 +108,10 @@ export default function AboutSection() {
                         <Skeleton className="h-8 w-1/3" />
                         <Skeleton className="h-12 w-full" />
                         <Skeleton className="h-24 w-full" />
+                         <div className="grid gap-6 sm:grid-cols-2">
+                            <Skeleton className="h-32 w-full" />
+                            <Skeleton className="h-32 w-full" />
+                        </div>
                     </div>
                 </div>
             </section>
