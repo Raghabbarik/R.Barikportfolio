@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'old-gray-uyua0uwjot.edgeone.app',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
   experimental: {
