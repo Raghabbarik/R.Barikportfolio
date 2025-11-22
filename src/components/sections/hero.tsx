@@ -48,19 +48,20 @@ export default function HeroSection() {
               </div>
               <div className="relative flex justify-center items-center">
                 {profileImage && (
-                    <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px]">
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/50 to-purple-600/50 blur-2xl animate-pulse" />
-                        <Image
-                            src={profileImage.imageUrl}
-                            alt="Profile Picture"
-                            data-ai-hint={about.profileImageHint}
-                            width={400}
-                            height={400}
-                            className="relative rounded-full border-4 border-primary/20 shadow-2xl aspect-square object-cover"
-                            priority
-                            style={{ filter: 'grayscale(100%)' }}
-                        />
+                  <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px]">
+                    <div className="absolute inset-[-50px] rounded-full bg-gradient-to-r from-blue-500/30 to-purple-600/30 blur-3xl animate-pulse" />
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary/20 shadow-2xl">
+                      <Image
+                        src={profileImage.imageUrl}
+                        alt="Profile Picture"
+                        data-ai-hint={about.profileImageHint}
+                        fill
+                        className="object-cover"
+                        priority
+                        style={{ filter: 'grayscale(100%)' }}
+                      />
                     </div>
+                  </div>
                 )}
               </div>
           </div>
