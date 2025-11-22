@@ -19,13 +19,18 @@ import { useData } from "@/lib/data-context";
 
 function isValidHttpUrl(string: string | undefined) {
     if (!string) return false;
-    try {
-      const url = new URL(string);
-      return url.protocol === "http:" || url.protocol === "https:";
-    } catch (_) {
-      return string.startsWith('data:image/');
+    // Check for data URIs or valid http/https urls
+    if (string.startsWith('data:image/') || string.startsWith('http://') || string.startsWith('https://')) {
+        try {
+            // Further validation for http urls to ensure they are well-formed
+            if(string.startsWith('http')) new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
     }
-  }
+    return false;
+}
 
 export function ProjectCardPreview({ project }: { project: Project }) {
   const { isDataLoaded } = useData();
