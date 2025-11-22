@@ -1,9 +1,11 @@
+
 "use client";
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import dynamic from 'next/dynamic';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
 
 const sectionClasses = "w-full py-16 md:py-24 lg:py-32";
 const SectionSkeleton = () => (
@@ -22,15 +24,35 @@ const PortfolioSection = dynamic(() => import('@/components/sections/portfolio')
 const ContactSection = dynamic(() => import('@/components/sections/contact'), { ssr: false, loading: () => <SectionSkeleton /> });
 
 export default function Home() {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background">
       <main className="flex-1">
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection />
-        <ServicesSection />
-        <PortfolioSection />
-        <ContactSection />
+        {isClient ? (
+            <>
+                <HeroSection />
+                <AboutSection />
+                <SkillsSection />
+                <ServicesSection />
+                <PortfolioSection />
+                <ContactSection />
+            </>
+        ) : (
+            <>
+                <section id="hero" className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden"><Skeleton className="h-full w-full" /></section>
+                <SectionSkeleton />
+                <SectionSkeleton />
+                <SectionSkeleton />
+                <SectionSkeleton />
+                <SectionSkeleton />
+            </>
+        )}
       </main>
       <Footer />
       <Header />

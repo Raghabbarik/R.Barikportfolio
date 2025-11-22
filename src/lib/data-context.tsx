@@ -32,11 +32,11 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 
 // Helper to rehydrate icons which are not stored in JSON
 const rehydrateSkills = (savedSkills: any[]): Skill[] => {
-  return savedSkills.map(skill => ({ ...skill, icon: getIcon(skill.icon) }));
+  return savedSkills.map(skill => ({ ...skill, icon: getIcon(skill.icon) || getIcon(skill.name) }));
 };
 
 const rehydrateServices = (savedServices: any[]): Service[] => {
-  return savedServices.map(service => ({ ...service, icon: getIcon(service.icon) }));
+  return savedServices.map(service => ({ ...service, icon: getIcon(service.icon) || getIcon(service.title) }));
 };
 
 
@@ -73,8 +73,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const dataToSave = {
         projects,
         // Remove icon components before saving to prevent circular JSON error
-        skills: skills.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName || rest.name})), 
-        services: services.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName || rest.title})),
+        skills: skills.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName})), 
+        services: services.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName})),
         about,
         contactDetails
     };
