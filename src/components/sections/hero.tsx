@@ -9,7 +9,6 @@ import BallpitBackground from "@/components/ballpit-background";
 import { useData } from "@/lib/data-context";
 import { Skeleton } from "../ui/skeleton";
 import { useEffect, useState } from "react";
-import TextType from "@/components/text-type";
 
 function isValidHttpUrl(string: string | undefined) {
     if (!string || string.length === 0) return false;
@@ -52,20 +51,10 @@ export default function HeroSection() {
                     <Hand className="h-5 w-5 text-primary animate-bounce"/>
                     <span>Hey, I'm {firstName}</span>
                 </div>
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tighter h-[160px] md:h-auto flex flex-col">
-                    <TextType
-                      text={["Full-Stack"]}
-                      className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
-                      typingSpeed={100}
-                      pauseDuration={Infinity}
-                    />
-                    <TextType
-                      text={["Web Developer"]}
-                      className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 md:-ml-8"
-                      typingSpeed={100}
-                      pauseDuration={Infinity}
-                      initialDelay={1500}
-                    />
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Full-Stack</span>
+                  <br />
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 md:-ml-8">Web Developer</span>
                 </h1>
                 <p className="max-w-md text-muted-foreground md:text-lg">
                     Crafting modern digital experiences with clean design and powerful functionality.

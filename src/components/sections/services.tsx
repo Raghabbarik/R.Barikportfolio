@@ -4,7 +4,6 @@
 import { useData } from "@/lib/data-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "../ui/skeleton";
-import TextType from "@/components/text-type";
 
 export default function ServicesSection() {
   const { services, isDataLoaded } = useData();
@@ -34,7 +33,7 @@ export default function ServicesSection() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-3">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              <TextType text="Services I Offer" />
+              Services I Offer
             </h2>
             <div className="mx-auto w-[100px] h-1.5 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full" />
           </div>

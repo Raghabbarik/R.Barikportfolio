@@ -6,7 +6,6 @@ import { useData } from "@/lib/data-context";
 import { getIcon } from "@/lib/get-icon";
 import { ContactForm } from "@/components/contact-form";
 import { Skeleton } from "../ui/skeleton";
-import TextType from "@/components/text-type";
 
 export default function ContactSection() {
   const { contactDetails, isDataLoaded } = useData();
@@ -43,7 +42,7 @@ export default function ContactSection() {
           <div className="space-y-6">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline">
-                <TextType text="Get in Touch" />
+                Get in Touch
               </h2>
               <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed">
                 Have a project in mind or just want to say hello? Feel free to
