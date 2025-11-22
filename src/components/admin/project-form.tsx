@@ -16,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { Project } from "@/lib/definitions";
-import React, { useEffect } from "react";
+import React from "react";
+import { Upload } from "lucide-react";
 
 const formSchema = z.object({
   id: z.string(),
@@ -26,6 +27,14 @@ const formSchema = z.object({
   liveDemoUrl: z.string().optional(),
   imageUrl: z.string().optional(),
   imageHint: z.string().min(1, { message: "Image hint is required." })
+}).refine(data => {
+    if (data.imageUrl) {
+        return z.string().url().or(z.string().startsWith("data:image/")).safeParse(data.imageUrl).success;
+    }
+    return true;
+}, {
+    message: "Image URL must be a valid URL or a data URI",
+    path: ["imageUrl"],
 });
 
 type ProjectFormData = z.infer<typeof formSchema>;
@@ -35,6 +44,44 @@ interface ProjectFormProps {
   onSave: (project: Project) => void;
   onCancel: () => void;
 }
+
+const ImageUploadField = ({ field, form }: { field: any, form: any }) => {
+    const inputRef = React.useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                form.setValue("imageUrl", reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    return (
+        <FormItem>
+            <FormLabel>Image URL</FormLabel>
+            <div className="flex gap-2">
+                <FormControl>
+                    <Input placeholder="https://images.unsplash.com/..." {...field} />
+                </FormControl>
+                <Button type="button" variant="outline" onClick={() => inputRef.current?.click()}>
+                    <Upload className="h-4 w-4" />
+                    <span className="sr-only">Upload</span>
+                </Button>
+                <input
+                    type="file"
+                    ref={inputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept="image/*"
+                />
+            </div>
+            <FormMessage />
+        </FormItem>
+    );
+};
 
 export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
 
@@ -103,13 +150,7 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
             control={form.control}
             name="imageUrl"
             render={({ field }) => (
-                <FormItem>
-                <FormLabel>Image URL</FormLabel>
-                <FormControl>
-                    <Input placeholder="https://images.unsplash.com/..." {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
+                <ImageUploadField field={field} form={form} />
             )}
             />
             <FormField

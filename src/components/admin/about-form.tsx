@@ -23,6 +23,8 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import type { About } from "@/lib/definitions";
+import React from "react";
+import { Upload } from "lucide-react";
 
 const formSchema = z.object({
   tagline: z.string().min(1, "Tagline is required."),
@@ -36,9 +38,9 @@ const formSchema = z.object({
     role: z.string().min(1, "Role is required."),
     company: z.string().min(1, "Company is required."),
   }),
-  profileImageUrl: z.string().url("Please enter a valid URL."),
+  profileImageUrl: z.string().url("Please enter a valid URL.").or(z.string().startsWith("data:image/")),
   profileImageHint: z.string().min(1, "Profile image hint is required."),
-  aboutImageUrl: z.string().url("Please enter a valid URL."),
+  aboutImageUrl: z.string().url("Please enter a valid URL.").or(z.string().startsWith("data:image/")),
   aboutImageHint: z.string().min(1, "About image hint is required."),
 });
 
@@ -48,6 +50,45 @@ interface AboutFormProps {
   about: About;
   onSave: (about: About) => void;
 }
+
+const ImageUploadField = ({ field, form, name }: { field: any, form: any, name: "profileImageUrl" | "aboutImageUrl" }) => {
+    const inputRef = React.useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                form.setValue(name, reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    return (
+        <FormItem>
+            <FormLabel>{name === 'profileImageUrl' ? 'Hero Image URL' : 'About Section Image URL'}</FormLabel>
+            <div className="flex gap-2">
+                <FormControl>
+                    <Input placeholder="https://images.unsplash.com/..." {...field} />
+                </FormControl>
+                <Button type="button" variant="outline" onClick={() => inputRef.current?.click()}>
+                    <Upload className="h-4 w-4" />
+                    <span className="sr-only">Upload</span>
+                </Button>
+                <input
+                    type="file"
+                    ref={inputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                    accept="image/*"
+                />
+            </div>
+            <FormMessage />
+        </FormItem>
+    );
+};
+
 
 export function AboutForm({ about, onSave }: AboutFormProps) {
 
@@ -115,13 +156,7 @@ export function AboutForm({ about, onSave }: AboutFormProps) {
                     control={form.control}
                     name="profileImageUrl"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Hero Image URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://images.unsplash.com/..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                      <ImageUploadField field={field} form={form} name="profileImageUrl" />
                     )}
                   />
                    <FormField
@@ -141,13 +176,7 @@ export function AboutForm({ about, onSave }: AboutFormProps) {
                     control={form.control}
                     name="aboutImageUrl"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>About Section Image URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://images.unsplash.com/..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                      <ImageUploadField field={field} form={form} name="aboutImageUrl" />
                     )}
                   />
                    <FormField
