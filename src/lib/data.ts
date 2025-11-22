@@ -72,15 +72,6 @@ export const projects: Project[] = [
     imageHint: "adventure website",
     liveDemoUrl: "#",
   },
-  {
-    id: "new-project",
-    title: "New Awesome Project",
-    description: "This is a new project I've been working on. It uses modern technologies to deliver a great user experience.",
-    technologies: ["React", "Vite", "Mantine"],
-    imageUrl: "https://images.unsplash.com/photo-1639789976408-3fd60d7896f4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0ZWNoJTIwcHJvZHVjdHxlbnwwfHx8fDE3NjM3MzA0NTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    imageHint: "tech product",
-    liveDemoUrl: "#"
-  },
 ];
 
 export const about: About = {
