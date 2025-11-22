@@ -12,6 +12,7 @@ import {
 import { useData } from "@/lib/data-context";
 import { Briefcase, GraduationCap } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import Shuffle from "../Shuffle";
 
 function isValidHttpUrl(string: string | undefined) {
     if (!string || string.length === 0) return false;
@@ -45,9 +46,11 @@ function AboutSectionContent() {
       <div className="space-y-6">
         <div className="space-y-3">
           <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">{about.tagline}</div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-            {about.title}
-          </h2>
+          <Shuffle
+            text={about.title}
+            className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl"
+            triggerOnce={true}
+          />
           <p className="max-w-[600px] text-muted-foreground md:text-lg/relaxed">
             {about.description}
           </p>

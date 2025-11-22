@@ -5,6 +5,7 @@ import { useData } from "@/lib/data-context";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "../ui/skeleton";
+import Shuffle from "../Shuffle";
 
 export default function SkillsSection() {
   const { skills, isDataLoaded } = useData();
@@ -32,9 +33,11 @@ export default function SkillsSection() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-3">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              My Skills
-            </h2>
+            <Shuffle
+              text="My Skills"
+              className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl"
+              triggerOnce={true}
+            />
             <div className="mx-auto w-[100px] h-1.5 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full" />
           </div>
         </div>

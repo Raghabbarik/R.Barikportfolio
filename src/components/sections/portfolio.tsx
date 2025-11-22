@@ -17,10 +17,14 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { useEffect, useState } from "react";
+import Shuffle from "../Shuffle";
 
 function isValidHttpUrl(string: string | undefined) {
-    if (!string) return false;
-    return string.startsWith('http') || string.startsWith('data:image');
+    if (!string || string.length === 0) return false;
+    if (string.startsWith('data:image/') || string.startsWith('http')) {
+        return true;
+    }
+    return false;
 }
 
 
@@ -60,9 +64,11 @@ export default function PortfolioSection() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline">
-              My Projects
-            </h2>
+            <Shuffle
+              text="My Projects"
+              className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline"
+              triggerOnce={true}
+            />
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               A selection of projects I've worked on.
             </p>
