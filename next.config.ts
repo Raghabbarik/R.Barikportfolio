@@ -33,6 +33,12 @@ const nextConfig: NextConfig = {
         hostname: 'old-gray-uyua0uwjot.edgeone.app',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
