@@ -11,16 +11,10 @@ import { Skeleton } from "../ui/skeleton";
 import { useEffect, useState } from "react";
 
 function isValidHttpUrl(string: string | undefined) {
-    if (!string) return false;
+    if (!string || string.length === 0) return false;
     // Check for data URIs or valid http/https urls
-    if (string.startsWith('data:image/') || string.startsWith('http://') || string.startsWith('https://')) {
-        try {
-            // Further validation for http urls to ensure they are well-formed
-            if(string.startsWith('http')) new URL(string);
-            return true;
-        } catch (_) {
-            return false;
-        }
+    if (string.startsWith('data:image/') || string.startsWith('http')) {
+        return true;
     }
     return false;
 }

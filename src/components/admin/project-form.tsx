@@ -28,8 +28,8 @@ const formSchema = z.object({
   imageUrl: z.string().optional(),
   imageHint: z.string().min(1, { message: "Image hint is required." })
 }).refine(data => {
-    if (data.imageUrl) {
-        return z.string().url().or(z.string().startsWith("data:image/")).safeParse(data.imageUrl).success;
+    if (data.imageUrl && data.imageUrl.length > 0) {
+        return z.string().url("Image URL must be a valid URL").or(z.string().startsWith("data:image/", { message: "Image must be a data URI" })).safeParse(data.imageUrl).success;
     }
     return true;
 }, {
