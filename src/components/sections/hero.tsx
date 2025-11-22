@@ -36,7 +36,7 @@ export default function HeroSection() {
     );
   }
 
-  const firstName = about.description.split(" ")[2] || "Raghab";
+  const firstName = "Raghab";
   const hasValidImage = isValidHttpUrl(about.profileImageUrl);
 
   return (
