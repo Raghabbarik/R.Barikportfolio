@@ -35,7 +35,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { Project } from "@/lib/definitions";
 import { Trash2 } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   id: z.string(),
@@ -53,10 +54,12 @@ interface ProjectFormProps {
   project: Project;
   onSave: (project: Project) => void;
   onDelete: (projectId: string) => void;
+  onSelect: () => void;
+  isSelected: boolean;
 }
 
-export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
-  const [isEditing, setIsEditing] = React.useState(project.id.startsWith('new-project-'));
+export function ProjectForm({ project, onSave, onDelete, onSelect, isSelected }: ProjectFormProps) {
+  const [isEditing, setIsEditing] = useState(project.id.startsWith('new-project-'));
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(formSchema),
@@ -75,6 +78,21 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
       setIsEditing(true);
     }
   }, [project, form]);
+
+  // When form values change, update the parent state for live preview
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+        if (isSelected) {
+            const projectToSave: Project = {
+                ...values,
+                id: project.id,
+                technologies: (values.technologies || "").split(",").map(t => t.trim()).filter(t => t),
+            };
+            onSave(projectToSave);
+        }
+    });
+    return () => subscription.unsubscribe();
+  }, [form, onSave, project.id, isSelected]);
 
   const onSubmit = (values: ProjectFormData) => {
     const projectToSave: Project = {
@@ -98,7 +116,13 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
   };
 
   return (
-    <Card className="flex flex-col">
+    <Card 
+        className={cn(
+            "flex flex-col cursor-pointer",
+            isSelected && "border-primary ring-2 ring-primary"
+        )}
+        onClick={onSelect}
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-grow">
           <CardHeader className="flex flex-row items-start justify-between">
@@ -108,7 +132,7 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
                 {!isEditing && (
-                    <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit</Button>
+                    <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}>Edit</Button>
                 )}
                  <DeleteProjectAlert 
                     project={project} 
@@ -118,7 +142,7 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
           </CardHeader>
           {isEditing && (
               <>
-                <CardContent className="space-y-4 flex-grow">
+                <CardContent className="space-y-4 flex-grow" onClick={(e) => e.stopPropagation()}>
                     <FormField
                         control={form.control}
                         name="title"
@@ -198,7 +222,7 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
                     )}
                     />
                 </CardContent>
-                <CardFooter className="gap-2">
+                <CardFooter className="gap-2" onClick={(e) => e.stopPropagation()}>
                     <Button type="submit">Save</Button>
                     <Button type="button" variant="ghost" onClick={handleCancel}>Cancel</Button>
                 </CardFooter>
@@ -213,14 +237,20 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
 
 function DeleteProjectAlert({ project, onDelete }: { project: Project, onDelete: () => void }) {
   
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onDelete();
   }
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-500 hover:bg-red-500/10">
+        <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-red-500 hover:text-red-500 hover:bg-red-500/10"
+            onClick={(e) => e.stopPropagation()}
+        >
             <Trash2 className="h-4 w-4" />
             <span className="sr-only">Delete Project</span>
         </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -26,12 +26,22 @@ import { useData } from "@/lib/data-context";
 import { PlusCircle, Save, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getIcon } from "@/lib/get-icon";
+import { ProjectCardPreview } from "@/components/admin/project-card-preview";
 
 
 function ProjectsTab() {
   const { projects, setProjects } = useData();
   const { toast } = useToast();
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    if (!selectedProject && projects.length > 0) {
+      setSelectedProject(projects[0]);
+    } else if (selectedProject) {
+        const updatedSelected = projects.find(p => p.id === selectedProject.id);
+        setSelectedProject(updatedSelected || (projects.length > 0 ? projects[0] : null));
+    }
+  }, [projects, selectedProject]);
 
   const handleSave = (updatedProject: Project) => {
     setProjects((prev) =>
@@ -44,7 +54,13 @@ function ProjectsTab() {
   };
 
   const handleDelete = (projectId: string) => {
-    setProjects((prev) => prev.filter((p) => p.id !== projectId));
+    setProjects((prev) => {
+        const newProjects = prev.filter((p) => p.id !== projectId);
+         if (selectedProject?.id === projectId) {
+            setSelectedProject(newProjects.length > 0 ? newProjects[0] : null);
+        }
+        return newProjects;
+    });
     toast({
       variant: "destructive",
       title: "Project Deleted",
@@ -56,18 +72,23 @@ function ProjectsTab() {
     const newProject: Project = {
       id: `new-project-${Date.now()}`,
       title: "New Project",
-      description: "",
-      technologies: [],
-      imageUrl: `new-project-${Date.now()}`,
-      imageHint: "new project",
+      description: "A brief description of your awesome new project.",
+      technologies: ["Next.js", "TypeScript"],
+      imageUrl: "new-project",
+      imageHint: "tech project",
       liveDemoUrl: "",
     };
     setProjects((prev) => [newProject, ...prev]);
+    setSelectedProject(newProject);
     toast({
         title: "New Project Added",
         description: "You can now edit the new project's details.",
     });
   };
+
+  const handleProjectSelect = (project: Project) => {
+      setSelectedProject(project);
+  }
 
   return (
     <div className="space-y-8">
@@ -86,15 +107,34 @@ function ProjectsTab() {
         </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <ProjectForm
-            key={project.id}
-            project={project}
-            onSave={handleSave}
-            onDelete={handleDelete}
-          />
-        ))}
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         <ScrollArea className="h-[60vh]">
+            <div className="space-y-6 pr-4">
+                {projects.map((project) => (
+                <ProjectForm
+                    key={project.id}
+                    project={project}
+                    onSave={handleSave}
+                    onDelete={handleDelete}
+                    onSelect={() => handleProjectSelect(project)}
+                    isSelected={selectedProject?.id === project.id}
+                />
+                ))}
+            </div>
+         </ScrollArea>
+        
+        <div className="hidden lg:block">
+            <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Live Preview</h3>
+            <div className="sticky top-24">
+                {selectedProject ? (
+                    <ProjectCardPreview project={selectedProject} />
+                ) : (
+                    <Card className="flex items-center justify-center h-96 border-dashed">
+                        <p className="text-muted-foreground">Select a project to preview</p>
+                    </Card>
+                )}
+            </div>
+        </div>
       </div>
     </div>
   );
