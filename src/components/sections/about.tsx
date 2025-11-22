@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -8,18 +9,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useData } from "@/lib/data-context";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Briefcase, GraduationCap } from "lucide-react";
 
 export default function AboutSection() {
   const { about } = useData();
+  const aboutImage = PlaceHolderImages.find(
+    (img) => img.id === about.aboutImageUrl
+  );
+
 
   return (
     <section id="about" className="w-full py-16 md:py-24 lg:py-32 bg-card">
       <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2 lg:gap-20">
         <div className="relative h-full min-h-[400px] lg:min-h-[500px]">
-          {about.aboutImageUrl && (
+          {aboutImage && (
             <Image
-              src={about.aboutImageUrl}
+              src={aboutImage.imageUrl}
               alt="About me image"
               data-ai-hint={about.aboutImageHint}
               fill
