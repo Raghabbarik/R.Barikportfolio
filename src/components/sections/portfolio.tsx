@@ -19,13 +19,20 @@ import { Skeleton } from "../ui/skeleton";
 
 function isValidHttpUrl(string: string | undefined) {
   if (!string) return false;
-  let url;
-  try {
-    url = new URL(string);
-  } catch (_) {
-    return false;
+    // Simple check for image file extensions.
+  if (/\.(jpeg|jpg|gif|png|webp)$/.test(string.toLowerCase())) {
+    try {
+        const url = new URL(string);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch (_) {
+        return false;
+    }
   }
-  return url.protocol === "http:" || url.protocol === "https:";
+  // Check for data URIs
+  if (string.startsWith('data:image/')) {
+    return true;
+  }
+  return false;
 }
 
 
@@ -86,8 +93,8 @@ export default function PortfolioSection() {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                        <p className="text-muted-foreground text-sm">No image available</p>
+                    <div className="w-full h-full flex items-center justify-center border-dashed border-2">
+                        <p className="text-muted-foreground text-sm text-center">Invalid or<br/>No Image URL</p>
                     </div>
                   )}
                 </div>

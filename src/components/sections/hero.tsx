@@ -11,13 +11,20 @@ import { Skeleton } from "../ui/skeleton";
 
 function isValidHttpUrl(string: string | undefined) {
   if (!string) return false;
-  let url;
-  try {
-    url = new URL(string);
-  } catch (_) {
-    return false;
+  // Simple check for image file extensions.
+  if (/\.(jpeg|jpg|gif|png|webp)$/.test(string.toLowerCase())) {
+    try {
+        const url = new URL(string);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch (_) {
+        return false;
+    }
   }
-  return url.protocol === "http:" || url.protocol === "https:";
+  // Check for data URIs
+  if (string.startsWith('data:image/')) {
+    return true;
+  }
+  return false;
 }
 
 export default function HeroSection() {
@@ -80,8 +87,8 @@ export default function HeroSection() {
                     </div>
                   </div>
                 ) : (
-                   <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] flex items-center justify-center bg-muted rounded-full">
-                     <p className="text-muted-foreground">No Image</p>
+                   <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] flex items-center justify-center bg-muted rounded-full border-4 border-dashed">
+                     <p className="text-muted-foreground text-center">Invalid or<br/>No Image URL</p>
                    </div>
                 )}
               </div>
