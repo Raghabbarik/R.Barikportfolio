@@ -24,7 +24,7 @@ const formSchema = z.object({
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
   description: z.string().min(10, { message: "Description must be at least 10 characters." }),
   technologies: z.string().min(1, { message: "Please add at least one technology." }),
-  liveDemoUrl: z.string().url().optional().or(z.literal('')),
+  liveDemoUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   imageUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   imageHint: z.string().min(1, { message: "Image hint is required." })
 });
@@ -44,6 +44,8 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
     defaultValues: {
       ...project,
       technologies: project.technologies.join(", "),
+      imageUrl: project.imageUrl || '',
+      liveDemoUrl: project.liveDemoUrl || '',
     },
   });
 
@@ -51,6 +53,8 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
     form.reset({
       ...project,
       technologies: project.technologies.join(", "),
+      imageUrl: project.imageUrl || '',
+      liveDemoUrl: project.liveDemoUrl || '',
     });
   }, [project, form]);
 

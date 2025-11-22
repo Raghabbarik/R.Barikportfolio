@@ -35,7 +35,7 @@ export function ProjectCardPreview({ project }: ProjectCardPreviewProps) {
   return (
     <Card className="overflow-hidden border border-border/20 flex flex-col">
       <div className="relative group aspect-video bg-muted">
-        {project.imageUrl ? (
+        {project.imageUrl && project.imageUrl.length > 0 ? (
           <Image
             src={project.imageUrl}
             alt={project.title}
