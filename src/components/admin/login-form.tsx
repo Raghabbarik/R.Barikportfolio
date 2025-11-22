@@ -46,7 +46,7 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // This is a mock login. In a real app, you'd authenticate against a server.
-    if (values.email === "rraghabbarik@gmail.com" && values.password === "admin") {
+    if (values.email === "rraghabbarik@gmail.com" && values.password === "Raghbbarik@2006") {
       toast({
         title: "Login Successful",
         description: "Redirecting to your dashboard...",
