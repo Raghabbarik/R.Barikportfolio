@@ -26,21 +26,20 @@ import { useData } from "@/lib/data-context";
 import { PlusCircle, Save, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { getIcon } from "@/lib/get-icon";
+
 
 function ProjectsTab() {
   const { projects, setProjects } = useData();
   const { toast } = useToast();
 
-  const handleSave = (project: Project) => {
-    const isNew = project.id.startsWith('new-project');
+  const handleSave = (updatedProject: Project) => {
     setProjects((prev) =>
-      isNew 
-        ? prev.map(p => p.id === project.id ? project : p)
-        : prev.map((p) => (p.id === project.id ? project : p))
+      prev.map((p) => (p.id === updatedProject.id ? updatedProject : p))
     );
      toast({
       title: "Project Saved!",
-      description: `The project "${project.title}" has been updated.`,
+      description: `The project "${updatedProject.title}" has been updated.`,
     });
   };
 
@@ -105,16 +104,13 @@ function SkillsTab() {
   const { skills, setSkills } = useData();
   const { toast } = useToast();
 
-  const handleSave = (skill: Skill) => {
-    const isNew = skill.id.startsWith('new-skill-');
+  const handleSave = (updatedSkill: Skill) => {
     setSkills((prev) =>
-      isNew
-        ? prev.map(s => s.id === skill.id ? skill : s)
-        : prev.map((s) => (s.id === skill.id ? skill : s))
+      prev.map((s) => (s.id === updatedSkill.id ? updatedSkill : s))
     );
      toast({
       title: "Skill Saved!",
-      description: `The skill "${skill.name}" has been updated.`,
+      description: `The skill "${updatedSkill.name}" has been updated.`,
     });
   };
 
@@ -130,7 +126,7 @@ function SkillsTab() {
   const handleAdd = () => {
     const newSkill: Skill = {
       id: `new-skill-${Date.now()}`,
-      name: `New Skill ${skills.length + 1}`,
+      name: `New Skill`,
       level: 50,
       icon: PlusCircle,
     };
@@ -176,16 +172,13 @@ function ServicesTab() {
   const { services, setServices } = useData();
   const { toast } = useToast();
 
-  const handleSave = (service: Service) => {
-    const isNew = service.id.startsWith('new-service-');
+  const handleSave = (updatedService: Service) => {
     setServices((prev) =>
-      isNew
-        ? prev.map(s => s.id === service.id ? service : s)
-        : prev.map((s) => (s.id === service.id ? service : s))
+      prev.map((s) => (s.id === updatedService.id ? updatedService : s))
     );
     toast({
       title: "Service Saved!",
-      description: `The service "${service.title}" has been updated.`,
+      description: `The service "${updatedService.title}" has been updated.`,
     });
   };
 
@@ -201,7 +194,7 @@ function ServicesTab() {
   const handleAdd = () => {
     const newService: Service = {
       id: `new-service-${Date.now()}`,
-      title: `New Service ${services.length + 1}`,
+      title: `New Service`,
       description: "",
       icon: PlusCircle,
     };
@@ -243,9 +236,14 @@ function ServicesTab() {
 
 function AboutTab() {
   const { about, setAbout } = useData();
+  const { toast } = useToast();
 
   const handleSave = (about: About) => {
     setAbout(about);
+    toast({
+      title: "About Section Saved!",
+      description: `Your "About Me" section has been updated.`,
+    });
   };
 
   return (
@@ -277,6 +275,11 @@ function SettingsTab() {
 
   const handleDelete = (contactId: string) => {
     setContactDetails((prev) => prev.filter((c) => c.id !== contactId));
+     toast({
+      variant: "destructive",
+      title: "Contact Deleted",
+      description: `The contact detail has been removed.`,
+    });
   };
 
   const handleAdd = () => {

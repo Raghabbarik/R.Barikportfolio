@@ -1,4 +1,3 @@
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -68,19 +66,19 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
   const form = useForm<SkillFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        id: skill.id,
-        name: skill.name,
-        level: skill.level,
-        icon: (skill.icon as any)?.displayName || "PlusCircle",
+      id: skill.id,
+      name: skill.name,
+      level: skill.level,
+      icon: (skill.icon as any)?.displayName || "PlusCircle",
     },
   });
 
    useEffect(() => {
     form.reset({
-        id: skill.id,
-        name: skill.name,
-        level: skill.level,
-        icon: (skill.icon as any)?.displayName || "PlusCircle",
+      id: skill.id,
+      name: skill.name,
+      level: skill.level,
+      icon: (skill.icon as any)?.displayName || "PlusCircle",
     });
      if (skill.id.startsWith('new-skill-')) {
       setIsEditing(true);
@@ -89,9 +87,9 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
 
   async function onSubmit(values: SkillFormData) {
     const skillToSave: Skill = {
-        ...values,
-        id: values.id.startsWith('new-skill-') ? values.name.toLowerCase().replace(/\s+/g, '-') + Date.now() : values.id,
-        icon: getIcon(values.icon),
+      ...values,
+      id: values.id.startsWith('new-skill-') ? values.name.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now() : values.id,
+      icon: getIcon(values.icon),
     };
     onSave(skillToSave);
     setIsEditing(false);
@@ -102,10 +100,10 @@ export function SkillForm({ skill, onSave, onDelete }: SkillFormProps) {
         onDelete(skill.id);
     } else {
         form.reset({
-            id: skill.id,
-            name: skill.name,
-            level: skill.level,
-            icon: (skill.icon as any)?.displayName || "PlusCircle",
+          id: skill.id,
+          name: skill.name,
+          level: skill.level,
+          icon: (skill.icon as any)?.displayName || "PlusCircle",
         });
         setIsEditing(false);
     }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -68,19 +66,19 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
   const form = useForm<ServiceFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        id: service.id,
-        title: service.title,
-        description: service.description,
-        icon: (service.icon as any)?.displayName || "PlusCircle",
+      id: service.id,
+      title: service.title,
+      description: service.description,
+      icon: (service.icon as any)?.displayName || "PlusCircle",
     },
   });
 
   useEffect(() => {
     form.reset({
-        id: service.id,
-        title: service.title,
-        description: service.description,
-        icon: (service.icon as any)?.displayName || "PlusCircle",
+      id: service.id,
+      title: service.title,
+      description: service.description,
+      icon: (service.icon as any)?.displayName || "PlusCircle",
     });
      if (service.id.startsWith('new-service-')) {
       setIsEditing(true);
@@ -90,7 +88,7 @@ export function ServiceForm({ service, onSave, onDelete }: ServiceFormProps) {
   const onSubmit = (values: ServiceFormData) => {
     const serviceToSave: Service = {
         ...values,
-        id: values.id.startsWith('new-service-') ? values.title.toLowerCase().replace(/\s+/g, '-') + Date.now() : values.id,
+        id: values.id.startsWith('new-service-') ? values.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now() : values.id,
         icon: getIcon(values.icon),
     };
     onSave(serviceToSave);

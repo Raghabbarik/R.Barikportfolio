@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -61,8 +60,7 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ contact, onSave, onDelete }: ContactFormProps) {
-  const { toast } = useToast();
-  const [isEditing, setIsEditing] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(contact.id.startsWith('new-contact'));
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(formSchema),
@@ -72,6 +70,9 @@ export function ContactForm({ contact, onSave, onDelete }: ContactFormProps) {
   // Keep form in sync with external changes
   useEffect(() => {
     form.reset(contact);
+     if (contact.id.startsWith('new-contact')) {
+      setIsEditing(true);
+    }
   }, [contact, form]);
   
 
@@ -81,8 +82,12 @@ export function ContactForm({ contact, onSave, onDelete }: ContactFormProps) {
   };
   
   const handleCancel = () => {
-    form.reset(contact); // Reset to original values
-    setIsEditing(false);
+    if (contact.id.startsWith('new-contact')) {
+      onDelete(contact.id);
+    } else {
+      form.reset(contact); // Reset to original values
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -90,7 +95,7 @@ export function ContactForm({ contact, onSave, onDelete }: ContactFormProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">{contact.text}</CardTitle>
+            <CardTitle className="text-lg">{isEditing ? "Edit Contact" : contact.text}</CardTitle>
             <div className="flex items-center gap-2">
                 {!isEditing && (
                     <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit</Button>
@@ -167,15 +172,9 @@ export function ContactForm({ contact, onSave, onDelete }: ContactFormProps) {
 
 
 function DeleteContactAlert({ contact, onDelete }: { contact: ContactDetail, onDelete: () => void }) {
-  const { toast } = useToast();
   
   const handleDelete = () => {
     onDelete();
-    toast({
-      variant: "destructive",
-      title: "Contact Deleted",
-      description: `The contact detail "${contact.text}" has been removed.`,
-    });
   }
 
   return (

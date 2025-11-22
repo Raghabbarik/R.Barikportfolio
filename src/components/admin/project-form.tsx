@@ -61,27 +61,16 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: project.id,
-      title: project.title || "",
-      description: project.description || "",
-      technologies: project.technologies.join(", ") || "",
-      liveDemoUrl: project.liveDemoUrl || "",
-      imageUrl: project.imageUrl || "",
-      imageHint: project.imageHint || "",
+      ...project,
+      technologies: project.technologies.join(", "),
     },
   });
 
   useEffect(() => {
     form.reset({
-      id: project.id,
-      title: project.title,
-      description: project.description,
+      ...project,
       technologies: project.technologies.join(", "),
-      liveDemoUrl: project.liveDemoUrl,
-      imageUrl: project.imageUrl,
-      imageHint: project.imageHint,
     });
-    // If it's a new project, keep it in editing mode
     if (project.id.startsWith('new-project-')) {
       setIsEditing(true);
     }
@@ -90,7 +79,7 @@ export function ProjectForm({ project, onSave, onDelete }: ProjectFormProps) {
   const onSubmit = (values: ProjectFormData) => {
     const projectToSave: Project = {
         ...values,
-        id: values.id.startsWith('new-project-') ? project.title.toLowerCase().replace(/\s+/g, '-') : values.id,
+        id: values.id.startsWith('new-project-') ? values.title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now() : values.id,
         technologies: values.technologies.split(",").map(t => t.trim()),
     };
     onSave(projectToSave);

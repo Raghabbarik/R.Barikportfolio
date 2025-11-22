@@ -14,11 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
@@ -47,7 +45,6 @@ interface AboutFormProps {
 }
 
 export function AboutForm({ about, onSave }: AboutFormProps) {
-  const { toast } = useToast();
 
   const form = useForm<AboutFormData>({
     resolver: zodResolver(formSchema),
@@ -56,10 +53,6 @@ export function AboutForm({ about, onSave }: AboutFormProps) {
 
   async function onSubmit(values: AboutFormData) {
     onSave(values);
-    toast({
-      title: "About Section Saved!",
-      description: `Your "About Me" section has been updated.`,
-    });
   }
 
   return (
