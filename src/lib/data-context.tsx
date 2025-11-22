@@ -91,23 +91,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
   }, [projects, skills, services, about, contactDetails]);
 
-
-  // Render a loader or skeleton while data is loading to prevent flash of initial content
-  if (!isDataLoaded) {
-    return (
-      <div className="w-full min-h-screen bg-background p-8">
-        <div className="space-y-8">
-          <Skeleton className="h-32 w-full" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Skeleton className="h-64 w-full" />
-            <Skeleton className="h-64 w-full" />
-            <Skeleton className="h-64 w-full" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <DataContext.Provider
       value={{

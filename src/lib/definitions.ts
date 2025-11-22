@@ -24,9 +24,9 @@ export type Project = {
   title: string;
   description: string;
   technologies: string[];
-  imageUrl?: string;
+  imageUrl: string;
   imageHint: string;
-  liveDemoUrl?: string;
+  liveDemoUrl: string;
 };
 
 export type About = {

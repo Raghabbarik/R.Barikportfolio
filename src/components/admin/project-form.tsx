@@ -46,13 +46,6 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
     },
   });
 
-  useEffect(() => {
-    form.reset({
-      ...project,
-      technologies: project.technologies.join(", "),
-    });
-  }, [project, form]);
-
   const onSubmit = (values: ProjectFormData) => {
     const projectToSave: Project = {
         ...values,
