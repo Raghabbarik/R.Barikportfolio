@@ -1,8 +1,10 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import emailjs from "@emailjs/browser";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -43,19 +45,32 @@ export function ContactForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real app, you would handle form submission here (e.g., send an email, save to a database).
-    // For this demo, we'll just show a success toast.
-    console.log(values);
+    const serviceId = "service_hzskuno";
+    const templateId = "template_acfg77l";
+    const publicKey = "Hh3sZ7CqkJ1I6EBIV";
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Message Sent!",
-      description: "Thanks for reaching out. I'll get back to you soon.",
-    });
+    const templateParams = {
+      from_name: values.name,
+      from_email: values.email,
+      to_name: "Raghab Barik", // You can customize this
+      message: values.message,
+    };
 
-    form.reset();
+    try {
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      toast({
+        title: "Message Sent!",
+        description: "Thanks for reaching out. I'll get back to you soon.",
+      });
+      form.reset();
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem sending your message. Please try again.",
+      });
+    }
   }
 
   return (
