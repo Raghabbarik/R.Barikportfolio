@@ -17,29 +17,17 @@ import { ArrowRight } from "lucide-react";
 import type { Project } from "@/lib/definitions";
 import { useData } from "@/lib/data-context";
 
-interface ProjectCardPreviewProps {
-  project: Project;
-}
-
 function isValidHttpUrl(string: string | undefined) {
-  if (!string) return false;
-  // Simple check for image file extensions.
-  if (/\.(jpeg|jpg|gif|png|webp)$/.test(string.toLowerCase())) {
+    if (!string) return false;
     try {
-        const url = new URL(string);
-        return url.protocol === "http:" || url.protocol === "https:";
+      const url = new URL(string);
+      return url.protocol === "http:" || url.protocol === "https:";
     } catch (_) {
-        return false;
+      return string.startsWith('data:image/');
     }
   }
-  // Check for data URIs
-  if (string.startsWith('data:image/')) {
-    return true;
-  }
-  return false;
-}
 
-export function ProjectCardPreview({ project }: ProjectCardPreviewProps) {
+export function ProjectCardPreview({ project }: { project: Project }) {
   const { isDataLoaded } = useData();
 
   if (!isDataLoaded) {
@@ -64,7 +52,7 @@ export function ProjectCardPreview({ project }: ProjectCardPreviewProps) {
             className="object-cover"
           />
         ) : (
-            <div className="w-full h-full flex items-center justify-center border-dashed border-2">
+            <div className="w-full h-full flex items-center justify-center border-dashed border-2 border-border/50">
                 <p className="text-muted-foreground text-sm text-center">Invalid or<br/>No image URL</p>
             </div>
         )}

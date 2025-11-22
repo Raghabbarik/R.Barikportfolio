@@ -1,11 +1,11 @@
 
 "use client";
 
-import Header from "@/components/header";
 import Footer from "@/components/footer";
 import dynamic from 'next/dynamic';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
+import Header from "@/components/header";
 
 const sectionClasses = "w-full py-16 md:py-24 lg:py-32";
 const SectionSkeleton = () => (
@@ -36,6 +36,7 @@ export default function Home() {
       <main className="flex-1">
         {isClient ? (
             <>
+                <Header />
                 <HeroSection />
                 <AboutSection />
                 <SkillsSection />
@@ -55,7 +56,6 @@ export default function Home() {
         )}
       </main>
       <Footer />
-      <Header />
     </div>
   );
 }
