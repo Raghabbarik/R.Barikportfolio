@@ -7,8 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Hand } from "lucide-react";
 import BallpitBackground from "@/components/ballpit-background";
 import { useData } from "@/lib/data-context";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Skeleton } from "../ui/skeleton";
+
+function isValidHttpUrl(string: string | undefined) {
+  if (!string) return false;
+  let url;
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+}
 
 export default function HeroSection() {
   const { about, isDataLoaded } = useData();
@@ -22,10 +32,7 @@ export default function HeroSection() {
   }
 
   const firstName = about.description.split(" ")[2] || "Raghab";
-
-  const profileImage = PlaceHolderImages.find(
-    (img) => img.id === about.profileImageUrl
-  );
+  const hasValidImage = isValidHttpUrl(about.profileImageUrl);
 
   return (
     <section id="hero" className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
@@ -57,12 +64,12 @@ export default function HeroSection() {
                 </div>
               </div>
               <div className="relative flex justify-center items-center">
-                {profileImage && (
+                {hasValidImage ? (
                   <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px]">
                     <div className="absolute inset-[-50px] rounded-full bg-gradient-to-r from-blue-500/30 to-purple-600/30 blur-3xl animate-pulse" />
                     <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary/20 shadow-2xl">
                       <Image
-                        src={profileImage.imageUrl}
+                        src={about.profileImageUrl}
                         alt="Profile Picture"
                         data-ai-hint={about.profileImageHint}
                         fill
@@ -72,6 +79,10 @@ export default function HeroSection() {
                       />
                     </div>
                   </div>
+                ) : (
+                   <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] flex items-center justify-center bg-muted rounded-full">
+                     <p className="text-muted-foreground">No Image</p>
+                   </div>
                 )}
               </div>
           </div>
