@@ -52,9 +52,7 @@ export default function HeroSection() {
                     <span>Hey, I'm {firstName}</span>
                 </div>
                 <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Full-Stack</span>
-                  <br />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 md:-ml-8">Web Developer</span>
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Web Developer</span>
                 </h1>
                 <p className="max-w-md text-muted-foreground md:text-lg">
                     Crafting modern digital experiences with clean design and powerful functionality.
