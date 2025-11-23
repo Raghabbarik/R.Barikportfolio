@@ -10,6 +10,7 @@ import {
   AnimatePresence
 } from 'framer-motion';
 import React, { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 export type DockItemData = {
   icon: React.ReactNode;
@@ -24,7 +25,6 @@ export type DockProps = {
   distance?: number;
   panelHeight?: number;
   baseItemSize?: number;
-  dockHeight?: number;
   magnification?: number;
   spring?: SpringOptions;
 };
@@ -34,10 +34,12 @@ type DockItemProps = {
   children: React.ReactNode;
   onClick?: () => void;
   mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
   spring: SpringOptions;
   distance: number;
   baseItemSize: number;
   magnification: number;
+  isMobile: boolean;
 };
 
 function DockItem({
@@ -45,23 +47,25 @@ function DockItem({
   className = '',
   onClick,
   mouseX,
+  mouseY,
   spring,
   distance,
   magnification,
-  baseItemSize
+  baseItemSize,
+  isMobile
 }: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isHovered = useMotionValue(0);
 
-  const mouseDistance = useTransform(mouseX, val => {
-    const rect = ref.current?.getBoundingClientRect() ?? {
-      x: 0,
-      width: baseItemSize
-    };
-    return val - rect.x - baseItemSize / 2;
+  const mousePos = useTransform(() => {
+    const rect = ref.current?.getBoundingClientRect() ?? { x: 0, y: 0, width: 0, height: 0 };
+    if (isMobile) {
+      return mouseX.get() - rect.x - rect.width / 2;
+    }
+    return mouseY.get() - rect.y - rect.height / 2;
   });
 
-  const targetSize = useTransform(mouseDistance, [-distance, 0, distance], [baseItemSize, magnification, baseItemSize]);
+  const targetSize = useTransform(mousePos, [-distance, 0, distance], [baseItemSize, magnification, baseItemSize]);
   const size = useSpring(targetSize, spring);
 
   return (
@@ -94,9 +98,10 @@ type DockLabelProps = {
   className?: string;
   children: React.ReactNode;
   isHovered?: MotionValue<number>;
+  isMobile: boolean;
 };
 
-function DockLabel({ children, className = '', isHovered }: DockLabelProps) {
+function DockLabel({ children, className = '', isHovered, isMobile }: DockLabelProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -107,15 +112,19 @@ function DockLabel({ children, className = '', isHovered }: DockLabelProps) {
     return () => unsubscribe();
   }, [isHovered]);
 
+  const yOffset = isMobile ? -10 : 10;
+  const positionClasses = isMobile ? 'bottom-full left-1/2 mb-2' : '-bottom-6 left-1/2';
+
+
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
           initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: 10 }}
+          animate={{ opacity: 1, y: yOffset }}
           exit={{ opacity: 0, y: 0 }}
           transition={{ duration: 0.2 }}
-          className={`${className} absolute -bottom-6 left-1/2 w-fit whitespace-pre rounded-md border border-border/50 bg-card px-2 py-0.5 text-xs text-foreground`}
+          className={`${className} absolute ${positionClasses} w-fit whitespace-pre rounded-md border border-border/50 bg-card px-2 py-0.5 text-xs text-foreground`}
           role="tooltip"
           style={{ x: '-50%' }}
         >
@@ -141,31 +150,35 @@ export default function Dock({
   className = '',
   spring = { mass: 0.1, stiffness: 150, damping: 12 },
   magnification = 70,
-  distance = 200,
-  panelHeight = 64,
-  dockHeight = 256,
+  distance = 80,
   baseItemSize = 50
 }: DockProps) {
   const mouseX = useMotionValue(Infinity);
-  const isHovered = useMotionValue(0);
+  const mouseY = useMotionValue(Infinity);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
-  const maxHeight = useMemo(() => Math.max(dockHeight, magnification + magnification / 2 + 4), [magnification]);
-  const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
-  const height = useSpring(heightRow, spring);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    mouseX.set(e.pageX);
+    mouseY.set(e.pageY);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(Infinity);
+    mouseY.set(Infinity);
+  };
+  
+  const mobileContainerClasses = "fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-end";
+  const desktopContainerClasses = "fixed top-4 right-4 z-50 flex flex-col items-end";
+
+  const mobileDockClasses = "flex items-end gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md p-2 shadow-2xl";
+  const desktopDockClasses = "flex flex-col items-end gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md p-2 shadow-2xl";
 
   return (
-    <motion.div style={{ height, scrollbarWidth: 'none' }} className="fixed top-4 right-4 z-50 flex max-w-full items-start justify-end">
+    <div className={isMobile ? mobileContainerClasses : desktopContainerClasses}>
       <motion.div
-        onMouseMove={({ pageX }) => {
-          isHovered.set(1);
-          mouseX.set(pageX);
-        }}
-        onMouseLeave={() => {
-          isHovered.set(0);
-          mouseX.set(Infinity);
-        }}
-        className={`${className} flex items-start gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md pt-2 px-4 shadow-2xl`}
-        style={{ height: panelHeight }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className={`${className} ${isMobile ? mobileDockClasses : desktopDockClasses}`}
         role="toolbar"
         aria-label="Application dock"
       >
@@ -175,16 +188,18 @@ export default function Dock({
             onClick={item.onClick}
             className={item.className}
             mouseX={mouseX}
+            mouseY={mouseY}
             spring={spring}
             distance={distance}
             magnification={magnification}
             baseItemSize={baseItemSize}
+            isMobile={isMobile}
           >
             <DockIcon>{item.icon}</DockIcon>
-            <DockLabel>{item.label}</DockLabel>
+            <DockLabel isMobile={isMobile}>{item.label}</DockLabel>
           </DockItem>
         ))}
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
