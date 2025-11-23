@@ -1,7 +1,8 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import useSWR, { useSWRConfig } from 'swr';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import type { Project, Skill, Service, About, ContactDetail } from '@/lib/definitions';
 import {
@@ -38,6 +39,8 @@ interface DataContextType {
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
+const PORTFOLIO_DOC_ID = 'main-content';
+
 const rehydrateSkills = (savedSkills: any[]): Skill[] => {
   return savedSkills.map(skill => ({ ...skill, icon: getIcon(skill.icon) || getIcon(skill.name) }));
 };
@@ -46,64 +49,71 @@ const rehydrateServices = (savedServices: any[]): Service[] => {
   return savedServices.map(service => ({ ...service, icon: getIcon(service.icon) || getIcon(service.title) }));
 };
 
-const PORTFOLIO_DOC_ID = 'main-content';
+const fetcher = async (firestore: any, docPath: string) => {
+  if (!firestore) return null;
+  const docRef = doc(firestore, docPath);
+  try {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
+    return null;
+  } catch (error: any) {
+    if (error.code === 'permission-denied') {
+      const permissionError = new FirestorePermissionError({
+        path: docRef.path,
+        operation: 'get',
+      });
+      errorEmitter.emit('permission-error', permissionError);
+    } else {
+      console.error("Fetcher failed:", error);
+    }
+    throw error;
+  }
+};
+
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
-  const [skills, setSkills] = useState<Skill[]>(initialSkills);
-  const [services, setServices] = useState<Service[]>(initialServices);
-  const [about, setAbout] = useState<About>(initialAbout);
-  const [contactDetails, setContactDetails] = useState<ContactDetail[]>(initialContactDetails);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  
   const { storage, firestore, user } = useFirebase();
+  const { mutate } = useSWRConfig();
   const { toast } = useToast();
+
+  const { data: remoteData, error: remoteError } = useSWR(
+    firestore ? `portfolioContent/${PORTFOLIO_DOC_ID}` : null,
+    (path) => fetcher(firestore, path),
+    { revalidateOnFocus: false }
+  );
+
+  const initialData = {
+      projects: initialProjects,
+      skills: initialSkills,
+      services: initialServices,
+      about: initialAbout,
+      contactDetails: initialContactDetails,
+  };
+
+  const data = remoteData || initialData;
+
+  const [projects, setProjects] = useState<Project[]>(data.projects);
+  const [skills, setSkills] = useState<Skill[]>(rehydrateSkills(data.skills));
+  const [services, setServices] = useState<Service[]>(rehydrateServices(data.services));
+  const [about, setAbout] = useState<About>(data.about);
+  const [contactDetails, setContactDetails] = useState<ContactDetail[]>(data.contactDetails);
+
+  React.useEffect(() => {
+    if (remoteData) {
+        setProjects(remoteData.projects || []);
+        setSkills(rehydrateSkills(remoteData.skills || []));
+        setServices(rehydrateServices(remoteData.services || []));
+        setAbout(remoteData.about || initialAbout);
+        setContactDetails(remoteData.contactDetails || []);
+    }
+  }, [remoteData]);
+  
+  const isDataLoaded = remoteData !== undefined || remoteError !== undefined;
+  
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-
-  useEffect(() => {
-    const loadData = async () => {
-      if (firestore) {
-        setIsDataLoaded(false);
-        const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
-        
-        try {
-          const docSnap = await getDoc(docRef);
-
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            console.log("Data loaded from Firestore:", data);
-            if (data.projects) setProjects(data.projects);
-            if (data.skills) setSkills(rehydrateSkills(data.skills));
-            if (data.services) setServices(rehydrateServices(data.services));
-            if (data.about) setAbout(data.about);
-            if (data.contactDetails) setContactDetails(data.contactDetails);
-          } else {
-            console.log("No such document! Initializing with default data.");
-            setProjects(initialProjects);
-            setSkills(initialSkills);
-            setServices(initialServices);
-            setAbout(initialAbout);
-            setContactDetails(initialContactDetails);
-          }
-        } catch (error: any) {
-          if (error.code === 'permission-denied') {
-            const permissionError = new FirestorePermissionError({
-              path: docRef.path,
-              operation: 'get',
-            });
-            errorEmitter.emit('permission-error', permissionError);
-          } else {
-            console.error("Failed to load data from Firestore", error);
-            toast({ variant: 'destructive', title: 'Error', description: 'Could not load portfolio data.' });
-          }
-        } finally {
-          setIsDataLoaded(true);
-        }
-      }
-    };
-    loadData();
-  }, [firestore, toast]); 
 
   const uploadFile = useCallback(async (file: File, path: string) => {
     if (!storage) {
@@ -155,7 +165,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
         contactDetails
     };
 
-    console.log("Saving all data to Firestore...", dataToSave);
     const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
     
     setDoc(docRef, dataToSave, { merge: true }).catch(async (serverError) => {
@@ -167,7 +176,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
             });
             errorEmitter.emit('permission-error', permissionError);
         } else {
-            // Handle other errors (e.g., network issues)
             console.error("Failed to save data:", serverError);
             toast({
                 variant: "destructive",
@@ -177,7 +185,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
         }
     });
 
-  }, [projects, skills, services, about, contactDetails, firestore, toast, user]);
+    mutate(`portfolioContent/${PORTFOLIO_DOC_ID}`);
+
+  }, [projects, skills, services, about, contactDetails, firestore, toast, user, mutate]);
 
   return (
     <DataContext.Provider
