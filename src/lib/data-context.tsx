@@ -61,7 +61,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const loadData = async () => {
-      if (firestore && user) {
+      // We need firestore to be available, but we don't need a logged-in user
+      // to read the public portfolio data.
+      if (firestore) {
         try {
           const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
           const docSnap = await getDoc(docRef);
@@ -77,8 +79,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
           } else {
             console.log("No such document! Initializing with default data.");
             // If no data in Firestore, use initial data from lib/data.ts
+            // and save it for the first time if an admin is logged in.
             setSkills(initialSkills);
             setServices(initialServices);
+             if (user) {
+              await saveAllData();
+            }
           }
         } catch (error) {
           console.error("Failed to load data from Firestore", error);
@@ -89,7 +95,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
       }
     };
     loadData();
-  }, [firestore, user, toast]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firestore, user]); // Depend on firestore and user to re-evaluate if they change
 
   const uploadFile = useCallback(async (file: File, path: string) => {
     if (!storage) {
@@ -128,6 +135,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
       toast({ variant: 'destructive', title: 'Error', description: 'Database not available.' });
       throw new Error("Firestore is not initialized.");
     }
+    // Saving should only be possible for authenticated users.
+    if (!user) {
+      toast({ variant: 'destructive', title: 'Authentication Error', description: 'You must be logged in to save data.' });
+      throw new Error("User is not authenticated.");
+    }
+    
     const dataToSave = {
         projects,
         skills: skills.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName || 'Code'})), 
@@ -145,7 +158,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       console.error("Failed to save data to Firestore", error);
       throw error;
     }
-  }, [projects, skills, services, about, contactDetails, firestore, toast]);
+  }, [projects, skills, services, about, contactDetails, firestore, toast, user]);
 
   return (
     <DataContext.Provider
