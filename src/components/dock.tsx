@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -137,11 +138,15 @@ export default function Dock({
   items,
   className = '',
   spring = { mass: 0.1, stiffness: 150, damping: 12 },
-  magnification = 70,
+  magnification: desktopMagnification = 70,
   distance = 80,
-  baseItemSize = 50
+  baseItemSize: desktopBaseItemSize = 50
 }: DockProps) {
   const mouseX = useMotionValue(Infinity);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const baseItemSize = isMobile ? 40 : desktopBaseItemSize;
+  const magnification = isMobile ? 55 : desktopMagnification;
 
   const handleMouseMove = (e: React.MouseEvent) => {
     mouseX.set(e.pageX);
@@ -160,7 +165,7 @@ export default function Dock({
   };
   
   const containerClasses = "fixed bottom-4 left-1/2 -translate-x-1/2 z-50";
-  const dockClasses = "flex items-end gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md p-2 shadow-2xl";
+  const dockClasses = "flex items-end gap-2 sm:gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md p-2 shadow-2xl";
 
   return (
     <div className={containerClasses}>

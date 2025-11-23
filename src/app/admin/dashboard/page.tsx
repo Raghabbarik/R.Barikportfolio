@@ -52,14 +52,14 @@ function AdminProjectCard({ project, onEdit, onDelete }: { project: Project; onE
     return (
         <div className="relative group">
             <ProjectCardPreview project={project} />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 sm:gap-4">
                  <Button variant="outline" size="sm" onClick={onEdit}>
-                    <Edit className="mr-2 h-4 w-4" /> Edit
+                    <Edit className="mr-0 sm:mr-2 h-4 w-4" /> <span className="hidden sm:inline">Edit</span>
                 </Button>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <Button variant="destructive" size="sm">
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                            <Trash2 className="mr-0 sm:mr-2 h-4 w-4" /> <span className="hidden sm:inline">Delete</span>
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
@@ -163,7 +163,7 @@ function ProjectsTab() {
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {projects.map((project) => (
               <AdminProjectCard 
                   key={project.id} 
@@ -308,7 +308,7 @@ function ServicesTab() {
         </div>
         <Button size="sm" className="h-8 gap-1" onClick={handleAdd}>
           <PlusCircle className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+          <span className="sr-only sm:not-sr-only sm:whitespace-rap">
             Add Service
           </span>
         </Button>
@@ -492,5 +492,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

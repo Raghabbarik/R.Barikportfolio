@@ -51,17 +51,17 @@ export default function HeroSection() {
                     <Hand className="h-5 w-5 text-primary animate-bounce"/>
                     <span>Hey, I'm {firstName}</span>
                 </div>
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter">
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Web Developer</span>
                 </h1>
                 <p className="max-w-md text-muted-foreground md:text-lg">
                     Crafting modern digital experiences with clean design and powerful functionality.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <Button asChild size="lg">
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <Button asChild size="lg" className="w-full sm:w-auto">
                         <Link href="#contact">Get In Touch</Link>
                     </Button>
-                    <Button asChild variant="outline" size="lg" className="bg-transparent border-primary/50 hover:bg-primary/10 hover:text-primary-foreground">
+                    <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-primary/50 hover:bg-primary/10 hover:text-primary-foreground">
                         <Link href="#portfolio">Browse Projects</Link>
                     </Button>
                 </div>
