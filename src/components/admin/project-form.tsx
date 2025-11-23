@@ -17,7 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { Project } from "@/lib/definitions";
 import React from "react";
-import { Upload } from "lucide-react";
+import { useData } from "@/lib/data-context";
+import { Progress } from "@/components/ui/progress";
+import { Upload, XCircle } from "lucide-react";
+import Image from "next/image";
 
 const formSchema = z.object({
   id: z.string(),
@@ -29,11 +32,11 @@ const formSchema = z.object({
   imageHint: z.string().min(1, { message: "Image hint is required." })
 }).refine(data => {
     if (data.imageUrl && data.imageUrl.length > 0) {
-        return z.string().url("Image URL must be a valid URL").or(z.string().startsWith("data:image/", { message: "Image must be a data URI" })).safeParse(data.imageUrl).success;
+        return z.string().url("Image URL must be a valid URL").safeParse(data.imageUrl).success;
     }
     return true;
 }, {
-    message: "Image URL must be a valid URL or a data URI",
+    message: "Image URL must be a valid URL",
     path: ["imageUrl"],
 });
 
@@ -45,39 +48,68 @@ interface ProjectFormProps {
   onCancel: () => void;
 }
 
-const ImageUploadField = ({ field, form }: { field: any, form: any }) => {
+const ImageUploadField = ({ form }: { form: any }) => {
+    const { uploadFile, uploadProgress, isUploading } = useData();
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const imageUrl = form.watch("imageUrl");
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                form.setValue("imageUrl", reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            const uploadedUrl = await uploadFile(file, `projects/${Date.now()}_${file.name}`);
+            if (uploadedUrl) {
+                form.setValue("imageUrl", uploadedUrl, { shouldValidate: true });
+            }
         }
     };
 
+    const handleRemoveImage = () => {
+        form.setValue("imageUrl", "", { shouldValidate: true });
+    }
+
     return (
         <FormItem>
-            <FormLabel>Image URL</FormLabel>
-            <div className="flex gap-2">
-                <FormControl>
-                    <Input placeholder="https://images.unsplash.com/..." {...field} />
-                </FormControl>
-                <Button type="button" variant="outline" onClick={() => inputRef.current?.click()}>
-                    <Upload className="h-4 w-4" />
-                    <span className="sr-only">Upload</span>
-                </Button>
-                <input
-                    type="file"
-                    ref={inputRef}
-                    onChange={handleFileChange}
-                    className="hidden"
-                    accept="image/*"
-                />
-            </div>
+            <FormLabel>Project Image</FormLabel>
+            {imageUrl ? (
+                 <div className="relative group w-full h-48 rounded-md overflow-hidden border">
+                    <Image src={imageUrl} alt="Project Image" fill className="object-cover" />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={handleRemoveImage}
+                        >
+                            <XCircle className="h-5 w-5" />
+                        </Button>
+                    </div>
+                </div>
+            ) : (
+                <div 
+                    className="w-full h-48 rounded-md border-2 border-dashed flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50"
+                    onClick={() => inputRef.current?.click()}
+                >
+                    {isUploading ? (
+                        <>
+                            <p className="text-sm text-muted-foreground mb-2">Uploading...</p>
+                            <Progress value={uploadProgress} className="w-3/4" />
+                        </>
+                    ) : (
+                        <>
+                            <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                            <p className="text-sm text-muted-foreground">Click or drag to upload</p>
+                        </>
+                    )}
+                </div>
+            )}
+             <input
+                type="file"
+                ref={inputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                accept="image/*"
+                disabled={isUploading}
+            />
             <FormMessage />
         </FormItem>
     );
@@ -90,13 +122,14 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
     defaultValues: {
       ...project,
       technologies: project.technologies.join(", "),
+      imageUrl: project.imageUrl || "",
     },
   });
 
   const onSubmit = (values: ProjectFormData) => {
     const projectToSave: Project = {
         ...values,
-        id: project.id, // ensure id is not lost
+        id: project.id,
         technologies: values.technologies.split(",").map(t => t.trim()).filter(t => t),
         imageUrl: values.imageUrl || "",
         liveDemoUrl: values.liveDemoUrl || "",
@@ -149,8 +182,8 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
             <FormField
             control={form.control}
             name="imageUrl"
-            render={({ field }) => (
-                <ImageUploadField field={field} form={form} />
+            render={() => (
+                <ImageUploadField form={form} />
             )}
             />
             <FormField
@@ -187,3 +220,5 @@ export function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
       </Form>
   );
 }
+
+    

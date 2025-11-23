@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { DataProvider } from "@/lib/data-context";
 import TargetCursor from "@/components/target-cursor";
+import { FirebaseProvider } from "@/firebase/provider";
 
 
 const poppins = Poppins({
@@ -39,16 +40,20 @@ export default function RootLayout({
           poppins.variable
         )}
       >
-        <DataProvider>
-          <TargetCursor 
-            spinDuration={2}
-            hideDefaultCursor={true}
-            parallaxOn={true}
-          />
-          {children}
-          <Toaster />
-        </DataProvider>
+        <FirebaseProvider>
+          <DataProvider>
+            <TargetCursor 
+              spinDuration={2}
+              hideDefaultCursor={true}
+              parallaxOn={true}
+            />
+            {children}
+            <Toaster />
+          </DataProvider>
+        </FirebaseProvider>
       </body>
     </html>
   );
 }
+
+    

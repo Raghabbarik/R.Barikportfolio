@@ -11,7 +11,9 @@ import {
   contactDetails as initialContactDetails,
 } from '@/lib/data';
 import { getIcon } from '@/lib/get-icon';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useFirebase } from '@/firebase/provider';
+import { uploadFile as uploadFileToStorage } from '@/firebase/storage';
+import { useToast } from '@/hooks/use-toast';
 
 interface DataContextType {
   projects: Project[];
@@ -26,6 +28,9 @@ interface DataContextType {
   setContactDetails: React.Dispatch<React.SetStateAction<ContactDetail[]>>;
   saveAllData: () => Promise<void>;
   isDataLoaded: boolean;
+  uploadFile: (file: File, path: string) => Promise<string | null>;
+  isUploading: boolean;
+  uploadProgress: number;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -47,6 +52,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [about, setAbout] = useState<About>(initialAbout);
   const [contactDetails, setContactDetails] = useState<ContactDetail[]>(initialContactDetails);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  
+  const { storage } = useFirebase();
+  const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     try {
@@ -61,18 +71,46 @@ export function DataProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to load data from localStorage", error);
-      // If loading fails, we still proceed with initial data
     } finally {
         setIsDataLoaded(true);
     }
   }, []);
+  
+  const uploadFile = useCallback(async (file: File, path: string) => {
+    if (!storage) {
+        toast({
+            variant: "destructive",
+            title: "Storage not configured",
+            description: "Firebase Storage is not available.",
+        });
+        return null;
+    }
+    setIsUploading(true);
+    setUploadProgress(0);
+    try {
+        const url = await uploadFileToStorage(storage, path, file, setUploadProgress);
+        toast({
+            title: "Upload Successful",
+            description: "Your image has been uploaded.",
+        });
+        return url;
+    } catch (error) {
+        console.error("Upload failed", error);
+        toast({
+            variant: "destructive",
+            title: "Upload Failed",
+            description: "Could not upload the image. Please try again.",
+        });
+        return null;
+    } finally {
+        setIsUploading(false);
+        setUploadProgress(0);
+    }
+  }, [storage, toast]);
 
   const saveAllData = useCallback(async () => {
-    // In a real app, this would be an API call to your backend to save the data.
-    // Here, we'll simulate it with a timeout and log to the console.
     const dataToSave = {
         projects,
-        // Remove icon components before saving to prevent circular JSON error
         skills: skills.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName})), 
         services: services.map(({ icon, ...rest }) => ({...rest, icon: (icon as any)?.displayName})),
         about,
@@ -87,7 +125,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       console.log("Data saved successfully!");
     } catch (error) {
       console.error("Failed to save data to localStorage", error);
-      throw error; // Re-throw to be caught by the calling function
+      throw error;
     }
   }, [projects, skills, services, about, contactDetails]);
 
@@ -106,6 +144,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
         setContactDetails,
         saveAllData,
         isDataLoaded,
+        uploadFile,
+        isUploading,
+        uploadProgress
       }}
     >
       {children}
@@ -120,3 +161,5 @@ export function useData() {
   }
   return context;
 }
+
+    
