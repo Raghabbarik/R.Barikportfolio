@@ -120,7 +120,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
     const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
     
-    // Using .catch() for permission error handling as instructed.
+    // Using .catch() for permission error handling.
     setDoc(docRef, dataToSave, { merge: true }).then(() => {
        toast({
         title: "Success!",
