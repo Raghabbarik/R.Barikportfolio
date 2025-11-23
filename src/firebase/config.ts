@@ -8,8 +8,7 @@ export const firebaseConfig = {
   storageBucket: "r-brikportfolio.appspot.com",
   messagingSenderId: "813589447644",
   appId: "1:813589447644:web:73496bbcf7c12df1238519",
-  measurementId: "G-5VRMB58L8M",
-  databaseURL: "https://r-brikportfolio-default-rtdb.firebaseio.com/"
+  measurementId: "G-5VRMB58L8M"
 };
 
     
