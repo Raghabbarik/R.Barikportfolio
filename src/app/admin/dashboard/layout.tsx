@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import {
   Home,
@@ -68,25 +69,11 @@ export default function DashboardLayout({
                   href="/"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
-                  <ArrowLeft className="h-5 w-5" />
+                  <LogOut className="h-5 w-5" />
                   <span className="sr-only">Back to Home</span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Back to Home</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/admin"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span className="sr-only">Logout</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Logout</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -123,15 +110,8 @@ export default function DashboardLayout({
                   href="/"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
-                  <ArrowLeft className="h-5 w-5" />
-                  Back to Home
-                </Link>
-                <Link
-                  href="/admin"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
                   <LogOut className="h-5 w-5" />
-                  Logout
+                  Back to Home
                 </Link>
               </nav>
             </SheetContent>
