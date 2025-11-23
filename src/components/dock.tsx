@@ -164,7 +164,7 @@ export default function Dock({
     mouseX.set(e.touches[0].pageX);
   };
   
-  const containerClasses = "fixed bottom-4 left-1/2 -translate-x-1/2 z-50";
+  const containerClasses = "fixed top-4 right-4 z-50";
   const dockClasses = "flex items-end gap-2 sm:gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md p-2 shadow-2xl";
 
   return (
