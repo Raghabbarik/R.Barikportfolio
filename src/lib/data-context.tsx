@@ -60,9 +60,16 @@ const fetcher = async (firestore: Firestore | null, docPath: string): Promise<an
       return docSnap.data();
     }
     return null; // No document found
-  } catch (error) {
-    console.error("Firebase fetcher failed:", error);
-    // Don't throw, just return null to avoid crashing the app on permission errors for public users
+  } catch (error: any) {
+    if (error.code === 'permission-denied') {
+      const permissionError = new FirestorePermissionError({
+        path: docRef.path,
+        operation: 'get',
+      });
+      errorEmitter.emit('permission-error', permissionError);
+    } else {
+      console.error("Firebase fetcher failed:", error);
+    }
     return null;
   }
 };
