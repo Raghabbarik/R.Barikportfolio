@@ -2,8 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
-import { doc, getDoc, setDoc, Firestore } from 'firebase/firestore';
+import { doc, setDoc, Firestore } from 'firebase/firestore';
 import type { Project, Skill, Service, About, ContactDetail } from '@/lib/definitions';
 import {
   projects as initialProjects,
@@ -49,70 +48,29 @@ const rehydrateServices = (savedServices: any[]): Service[] => {
   return savedServices.map(service => ({ ...service, icon: getIcon(service.icon) || getIcon(service.title) }));
 };
 
-const fetcher = async (firestore: Firestore | null, docPath: string): Promise<any> => {
-  if (!firestore) {
-    return null;
-  }
-  const docRef = doc(firestore, docPath);
-  try {
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return docSnap.data();
-    }
-    return null; // No document found
-  } catch (error: any) {
-    if (error.code === 'permission-denied') {
-      const permissionError = new FirestorePermissionError({
-        path: docRef.path,
-        operation: 'get',
-      });
-      errorEmitter.emit('permission-error', permissionError);
-      return null;
-    } else {
-      console.error("Firebase fetcher failed:", error);
-    }
-    return null;
-  }
-};
-
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const { storage, firestore, user } = useFirebase();
-  const { mutate } = useSWRConfig();
   const { toast } = useToast();
-
-  const { data: remoteData, isLoading } = useSWR(
-    firestore ? `portfolioContent/${PORTFOLIO_DOC_ID}` : null,
-    (path) => fetcher(firestore, path),
-    { 
-      revalidateOnFocus: false,
-      shouldRetryOnError: false, // Don't retry on permission errors
-    }
-  );
 
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [skills, setSkills] = useState<Skill[]>(rehydrateSkills(initialSkills));
   const [services, setServices] = useState<Service[]>(rehydrateServices(initialServices));
   const [about, setAbout] = useState<About>(initialAbout);
   const [contactDetails, setContactDetails] = useState<ContactDetail[]>(initialContactDetails);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   
   useEffect(() => {
-    if (remoteData) {
-      setProjects(remoteData.projects || initialProjects);
-      setSkills(rehydrateSkills(remoteData.skills || initialSkills));
-      setServices(rehydrateServices(remoteData.services || initialServices));
-      setAbout(remoteData.about || initialAbout);
-      setContactDetails(remoteData.contactDetails || initialContactDetails);
-    } else if (!isLoading) {
-      setProjects(initialProjects);
-      setSkills(rehydrateSkills(initialSkills));
-      setServices(rehydrateServices(initialServices));
-      setAbout(initialAbout);
-      setContactDetails(initialContactDetails);
-    }
-  }, [remoteData, isLoading]);
+    // We are no longer fetching from Firestore on load due to persistent permission errors.
+    // We will rely on the initial state from `data.ts` and saving from the admin panel.
+    setProjects(initialProjects);
+    setSkills(rehydrateSkills(initialSkills));
+    setServices(rehydrateServices(initialServices));
+    setAbout(initialAbout);
+    setContactDetails(initialContactDetails);
+    setIsDataLoaded(true);
+  }, []);
   
-  const isDataLoaded = !isLoading;
   
   const uploadFile = useCallback(async (file: File, path: string, onProgress: (progress: number) => void) => {
     if (!storage) {
@@ -163,7 +121,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
     
     setDoc(docRef, dataToSave, { merge: true }).then(() => {
-       mutate(`portfolioContent/${PORTFOLIO_DOC_ID}`);
        toast({
         title: "Success!",
         description: "All your changes have been saved.",
@@ -186,7 +143,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         }
     });
 
-  }, [projects, skills, services, about, contactDetails, firestore, toast, user, mutate]);
+  }, [projects, skills, services, about, contactDetails, firestore, toast, user]);
 
   return (
     <DataContext.Provider
