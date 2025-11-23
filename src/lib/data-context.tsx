@@ -62,14 +62,10 @@ const fetcher = async (firestore: Firestore | null, docPath: string): Promise<an
     return null; // No document found
   } catch (error: any) {
     if (error.code === 'permission-denied') {
-      // Log the error for debugging but don't crash the app for public visitors.
-      // The app will fall back to local data.
-      console.error("Firestore permission denied. Falling back to local data.", error);
       const permissionError = new FirestorePermissionError({
         path: docRef.path,
         operation: 'get',
       });
-      // We emit this for the dev overlay, but by returning null, we allow the app to continue.
       errorEmitter.emit('permission-error', permissionError);
       return null;
     } else {
@@ -101,8 +97,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [contactDetails, setContactDetails] = useState<ContactDetail[]>(initialContactDetails);
   
   useEffect(() => {
-    // If there's remote data, use it.
-    // If loading is finished and there's an error or no data, fall back to initial data.
     if (remoteData) {
       setProjects(remoteData.projects || initialProjects);
       setSkills(rehydrateSkills(remoteData.skills || initialSkills));
@@ -110,7 +104,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setAbout(remoteData.about || initialAbout);
       setContactDetails(remoteData.contactDetails || initialContactDetails);
     } else if (!isLoading) {
-      // This block will execute if remoteData is null/undefined after loading has completed
       setProjects(initialProjects);
       setSkills(rehydrateSkills(initialSkills));
       setServices(rehydrateServices(initialServices));
@@ -184,7 +177,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
             });
             errorEmitter.emit('permission-error', permissionError);
         } else {
-            console.error("Failed to save data:", serverError);
+            // For other errors, show a generic toast
             toast({
                 variant: "destructive",
                 title: "Error!",
