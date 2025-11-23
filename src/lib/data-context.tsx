@@ -80,7 +80,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const { mutate } = useSWRConfig();
   const { toast } = useToast();
 
-  const { data: remoteData, isLoading } = useSWR(
+  const { data: remoteData, isLoading, error: fetchError } = useSWR(
     firestore ? `portfolioContent/${PORTFOLIO_DOC_ID}` : null,
     (path) => fetcher(firestore, path),
     { 
@@ -96,20 +96,23 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [contactDetails, setContactDetails] = useState<ContactDetail[]>(initialContactDetails);
   
   useEffect(() => {
+    // If there's remote data, use it.
+    // If loading is finished and there's an error or no data, fall back to initial data.
     if (remoteData) {
-      setProjects(remoteData.projects || []);
-      setSkills(rehydrateSkills(remoteData.skills || []));
-      setServices(rehydrateServices(remoteData.services || []));
+      setProjects(remoteData.projects || initialProjects);
+      setSkills(rehydrateSkills(remoteData.skills || initialSkills));
+      setServices(rehydrateServices(remoteData.services || initialServices));
       setAbout(remoteData.about || initialAbout);
-      setContactDetails(remoteData.contactDetails || []);
-    } else {
+      setContactDetails(remoteData.contactDetails || initialContactDetails);
+    } else if (!isLoading) {
+      // This block will execute if remoteData is null/undefined after loading has completed
       setProjects(initialProjects);
       setSkills(rehydrateSkills(initialSkills));
       setServices(rehydrateServices(initialServices));
       setAbout(initialAbout);
       setContactDetails(initialContactDetails);
     }
-  }, [remoteData]);
+  }, [remoteData, isLoading]);
   
   const isDataLoaded = !isLoading;
   
