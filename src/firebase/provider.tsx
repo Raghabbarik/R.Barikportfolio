@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { FirebaseApp, initializeApp, getApps } from 'firebase/app';
-import { Auth, getAuth, signInAnonymously, onAuthStateChanged, User } from 'firebase/auth';
+import { Auth, getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { FirebaseStorage, getStorage } from 'firebase/storage';
 import { Firestore, getFirestore } from 'firebase/firestore';
 import { firebaseConfig } from './config';
@@ -35,15 +35,14 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
             const storage = getStorage(app);
             const firestore = getFirestore(app);
 
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    setFirebase({ app, auth, storage, firestore, user });
-                } else {
-                    signInAnonymously(auth).catch((error) => {
-                        console.error("Anonymous sign-in failed:", error);
-                    });
-                }
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                setFirebase({ app, auth, storage, firestore, user });
             });
+
+            // Set initial state without a user
+            setFirebase({ app, auth, storage, firestore, user: null });
+
+            return () => unsubscribe();
         }
     }, []);
 
