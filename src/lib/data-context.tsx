@@ -62,11 +62,16 @@ const fetcher = async (firestore: Firestore | null, docPath: string): Promise<an
     return null; // No document found
   } catch (error: any) {
     if (error.code === 'permission-denied') {
+      // Log the error for debugging but don't crash the app for public visitors.
+      // The app will fall back to local data.
+      console.error("Firestore permission denied. Falling back to local data.", error);
       const permissionError = new FirestorePermissionError({
         path: docRef.path,
         operation: 'get',
       });
+      // We emit this for the dev overlay, but by returning null, we allow the app to continue.
       errorEmitter.emit('permission-error', permissionError);
+      return null;
     } else {
       console.error("Firebase fetcher failed:", error);
     }
@@ -80,7 +85,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const { mutate } = useSWRConfig();
   const { toast } = useToast();
 
-  const { data: remoteData, isLoading, error: fetchError } = useSWR(
+  const { data: remoteData, isLoading } = useSWR(
     firestore ? `portfolioContent/${PORTFOLIO_DOC_ID}` : null,
     (path) => fetcher(firestore, path),
     { 
