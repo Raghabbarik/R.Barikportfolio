@@ -15,6 +15,8 @@ import { getIcon } from '@/lib/get-icon';
 import { useFirebase } from '@/firebase/provider';
 import { uploadFile as uploadFileToStorage } from '@/firebase/storage';
 import { useToast } from '@/hooks/use-toast';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 interface DataContextType {
   projects: Project[];
@@ -61,11 +63,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const loadData = async () => {
-      // We need firestore to be available, but we don't need a logged-in user
-      // to read the public portfolio data.
       if (firestore) {
+        setIsDataLoaded(false);
+        const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
+        
         try {
-          const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
           const docSnap = await getDoc(docRef);
 
           if (docSnap.exists()) {
@@ -78,25 +80,30 @@ export function DataProvider({ children }: { children: ReactNode }) {
             if (data.contactDetails) setContactDetails(data.contactDetails);
           } else {
             console.log("No such document! Initializing with default data.");
-            // If no data in Firestore, use initial data from lib/data.ts
-            // and save it for the first time if an admin is logged in.
+            setProjects(initialProjects);
             setSkills(initialSkills);
             setServices(initialServices);
-             if (user) {
-              await saveAllData();
-            }
+            setAbout(initialAbout);
+            setContactDetails(initialContactDetails);
           }
-        } catch (error) {
-          console.error("Failed to load data from Firestore", error);
-          toast({ variant: 'destructive', title: 'Error', description: 'Could not load portfolio data.' });
+        } catch (error: any) {
+          if (error.code === 'permission-denied') {
+            const permissionError = new FirestorePermissionError({
+              path: docRef.path,
+              operation: 'get',
+            });
+            errorEmitter.emit('permission-error', permissionError);
+          } else {
+            console.error("Failed to load data from Firestore", error);
+            toast({ variant: 'destructive', title: 'Error', description: 'Could not load portfolio data.' });
+          }
         } finally {
           setIsDataLoaded(true);
         }
       }
     };
     loadData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firestore, user]); // Depend on firestore and user to re-evaluate if they change
+  }, [firestore, toast]); 
 
   const uploadFile = useCallback(async (file: File, path: string) => {
     if (!storage) {
@@ -133,12 +140,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const saveAllData = useCallback(async () => {
     if (!firestore) {
       toast({ variant: 'destructive', title: 'Error', description: 'Database not available.' });
-      throw new Error("Firestore is not initialized.");
+      return;
     }
-    // Saving should only be possible for authenticated users.
     if (!user) {
       toast({ variant: 'destructive', title: 'Authentication Error', description: 'You must be logged in to save data.' });
-      throw new Error("User is not authenticated.");
+      return;
     }
     
     const dataToSave = {
@@ -150,14 +156,27 @@ export function DataProvider({ children }: { children: ReactNode }) {
     };
 
     console.log("Saving all data to Firestore...", dataToSave);
-    try {
-      const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
-      await setDoc(docRef, dataToSave, { merge: true });
-      console.log("Data saved successfully to Firestore!");
-    } catch (error) {
-      console.error("Failed to save data to Firestore", error);
-      throw error;
-    }
+    const docRef = doc(firestore, 'portfolioContent', PORTFOLIO_DOC_ID);
+    
+    setDoc(docRef, dataToSave, { merge: true }).catch(async (serverError) => {
+        if (serverError.code === 'permission-denied') {
+            const permissionError = new FirestorePermissionError({
+                path: docRef.path,
+                operation: 'update',
+                requestResourceData: dataToSave,
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        } else {
+            // Handle other errors (e.g., network issues)
+            console.error("Failed to save data:", serverError);
+            toast({
+                variant: "destructive",
+                title: "Error!",
+                description: `Could not save changes: ${serverError.message}`,
+            });
+        }
+    });
+
   }, [projects, skills, services, about, contactDetails, firestore, toast, user]);
 
   return (

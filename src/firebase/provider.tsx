@@ -1,12 +1,13 @@
 
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, Suspense } from 'react';
 import { FirebaseApp, initializeApp, getApps } from 'firebase/app';
 import { Auth, getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { FirebaseStorage, getStorage } from 'firebase/storage';
 import { Firestore, getFirestore } from 'firebase/firestore';
 import { firebaseConfig } from './config';
+import FirebaseErrorListener from '@/components/FirebaseErrorListener';
 
 interface FirebaseContextType {
     app: FirebaseApp | null;
@@ -38,16 +39,23 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
             const unsubscribe = onAuthStateChanged(auth, (user) => {
                 setFirebase({ app, auth, storage, firestore, user });
             });
-
-            // Set initial state without a user
-            setFirebase({ app, auth, storage, firestore, user: null });
+            
+            // Set initial state without a user but with services initialized
+            if (!firebase.app) {
+              setFirebase({ app, auth, storage, firestore, user: auth.currentUser });
+            }
 
             return () => unsubscribe();
         }
-    }, []);
+    }, [firebase.app]);
 
     return (
         <FirebaseContext.Provider value={firebase}>
+            {process.env.NODE_ENV === 'development' && (
+                <Suspense fallback={null}>
+                    <FirebaseErrorListener />
+                </Suspense>
+            )}
             {children}
         </FirebaseContext.Provider>
     );
