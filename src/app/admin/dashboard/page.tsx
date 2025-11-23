@@ -161,18 +161,19 @@ function ProjectsTab() {
             </span>
         </Button>
       </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project) => (
+              <AdminProjectCard 
+                  key={project.id} 
+                  project={project}
+                  onEdit={() => handleEdit(project)}
+                  onDelete={() => handleDelete(project.id)}
+              />
+          ))}
+      </div>
 
        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project) => (
-                    <AdminProjectCard 
-                        key={project.id} 
-                        project={project}
-                        onEdit={() => handleEdit(project)}
-                        onDelete={() => handleDelete(project.id)}
-                    />
-                ))}
-            </div>
             {editingProject && (
                 <DialogContent className="max-w-3xl">
                     <DialogHeader>
