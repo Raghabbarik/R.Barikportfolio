@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Mountain } from "lucide-react";
 import Link from "next/link";
 import { useFirebase } from "@/firebase/provider";
-import { signInAnonymously } from "firebase/auth";
+import { signInWithEmailAndPassword, type AuthError } from "firebase/auth";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -42,21 +42,12 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      email: "rraghabbarik@gmail.com",
       password: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.email !== "rraghabbarik@gmail.com" || values.password !== "Raghab@2006") {
-        toast({
-            variant: "destructive",
-            title: "Login Failed",
-            description: "Invalid email or password.",
-        });
-        return;
-    }
-
     if (!auth) {
          toast({
             variant: "destructive",
@@ -67,28 +58,35 @@ export function LoginForm() {
     }
     
     try {
-        await signInAnonymously(auth);
+        await signInWithEmailAndPassword(auth, values.email, values.password);
         toast({
             title: "Login Successful",
             description: "Redirecting to your dashboard...",
         });
         await new Promise(resolve => setTimeout(resolve, 1000));
         router.push("/admin/dashboard");
-    } catch (error: any) {
-        console.error("Anonymous sign-in failed", error);
-        if (error.code === 'auth/operation-not-allowed') {
-             toast({
-                variant: "destructive",
-                title: "Firebase Login Failed",
-                description: "Anonymous sign-in is not enabled in your Firebase console.",
-            });
-        } else {
-            toast({
-                variant: "destructive",
-                title: "Firebase Login Failed",
-                description: "Could not sign in. Please check console for details.",
-            });
+    } catch (error) {
+        console.error("Sign-in failed", error);
+        const authError = error as AuthError;
+        let description = "An unknown error occurred. Please try again.";
+        switch (authError.code) {
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+            case 'auth/invalid-credential':
+                description = "Invalid email or password. Please try again.";
+                break;
+            case 'auth/invalid-email':
+                description = "The email address is not valid.";
+                break;
+            case 'auth/too-many-requests':
+                description = "Too many login attempts. Please try again later.";
+                break;
         }
+        toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: description,
+        });
     }
   }
 
