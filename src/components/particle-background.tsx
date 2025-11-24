@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useRef, useEffect, useCallback } from 'react';
@@ -35,37 +36,41 @@ const ParticleBackground = () => {
 
         const setCanvasSize = () => {
             const dpr = window.devicePixelRatio || 1;
-            const rect = canvas.getBoundingClientRect();
+            const rect = canvas.parentElement!.getBoundingClientRect();
             canvas.width = rect.width * dpr;
             canvas.height = rect.height * dpr;
-            if (ctx) {
-               ctx.scale(dpr, dpr);
-            }
+            ctx.scale(dpr, dpr);
+            
             particles = [];
-            const numParticles = Math.floor(canvas.width / 50);
+            const numParticles = Math.floor(canvas.getBoundingClientRect().width / 50);
 
             for(let i = 0; i < numParticles; i++) {
                 particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
+                    x: Math.random() * rect.width,
+                    y: Math.random() * rect.height,
                     r: Math.random() * 4 + 1, // radius
                     s: Math.random() * 0.5 + 0.2 // speed
                 });
             }
         };
+        
 
         const resizeObserver = new ResizeObserver(() => {
             setCanvasSize();
         });
 
-        resizeObserver.observe(canvas.parentElement!);
+        if (canvas.parentElement) {
+            resizeObserver.observe(canvas.parentElement);
+        }
         
         setCanvasSize();
         animationFrameId = requestAnimationFrame(() => draw(ctx, particles));
 
         return () => {
             cancelAnimationFrame(animationFrameId);
-            resizeObserver.disconnect();
+            if (canvas.parentElement) {
+                resizeObserver.unobserve(canvas.parentElement);
+            }
         };
     }, [draw]);
 
