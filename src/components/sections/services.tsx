@@ -4,6 +4,7 @@
 import { useData } from "@/lib/data-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "../ui/skeleton";
+import TextType from "../ui/text-type";
 
 export default function ServicesSection() {
   const { services, isDataLoaded } = useData();
@@ -32,8 +33,17 @@ export default function ServicesSection() {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-3">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Services I Offer
+             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl min-h-[48px] md:min-h-[60px]">
+                <TextType
+                    text="Services I Offer"
+                    typingSpeed={50}
+                    deletingSpeed={25}
+                    pauseDuration={4000}
+                    loop={false}
+                    startOnVisible={true}
+                    className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
+                    cursorClassName="text-primary"
+                />
             </h2>
             <div className="mx-auto w-[100px] h-1.5 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full" />
           </div>

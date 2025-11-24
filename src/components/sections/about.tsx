@@ -14,6 +14,7 @@ import { Briefcase, GraduationCap, Download } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import TextType from "../ui/text-type";
 
 function isValidHttpUrl(string: string | undefined) {
     if (!string || string.length === 0) return false;
@@ -47,8 +48,17 @@ function AboutSectionContent() {
       <div className="space-y-6">
         <div className="space-y-3">
           <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">{about.tagline}</div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-            {about.title}
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl min-h-[48px] md:min-h-[60px]">
+             <TextType
+                text={about.title}
+                typingSpeed={50}
+                deletingSpeed={25}
+                pauseDuration={4000}
+                loop={false}
+                startOnVisible={true}
+                className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
+                cursorClassName="text-primary"
+              />
           </h2>
           <p className="max-w-[600px] text-muted-foreground md:text-lg/relaxed">
             {about.description}
