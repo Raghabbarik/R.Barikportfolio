@@ -10,8 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useData } from "@/lib/data-context";
-import { Briefcase, GraduationCap } from "lucide-react";
+import { Briefcase, GraduationCap, Download } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 function isValidHttpUrl(string: string | undefined) {
     if (!string || string.length === 0) return false;
@@ -51,6 +53,14 @@ function AboutSectionContent() {
           <p className="max-w-[600px] text-muted-foreground md:text-lg/relaxed">
             {about.description}
           </p>
+        </div>
+        <div className="flex gap-4">
+            <Button asChild>
+                <Link href="/resume.pdf" download>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Resume
+                </Link>
+            </Button>
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
           <Card className="transition-all duration-300 hover:bg-muted/50 hover:shadow-lg hover:-translate-y-2 hover:shadow-primary/20">
