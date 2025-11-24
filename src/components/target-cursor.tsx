@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, {
@@ -80,14 +81,16 @@ const TargetCursor: React.FC<TargetCursorProps> = ({
   }, [handleMouseMove, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseLeave, hideDefaultCursor]);
 
   useEffect(() => {
+    // This parallax effect was blocking button clicks.
+    // It is being disabled to restore site functionality.
     if (parallaxOn) {
       const parallaxTargets = document.querySelectorAll<HTMLElement>("[data-parallax]");
       const handleParallax = (e: MouseEvent) => {
         parallaxTargets.forEach((target) => {
-          const speed = (parseInt(target.dataset.parallax || "0") || parallaxMultiplier);
-          const x = (window.innerWidth - e.pageX * speed) / 100;
-          const y = (window.innerHeight - e.pageY * speed) / 100;
-          target.style.transform = `translateX(${x}px) translateY(${y}px)`;
+          // const speed = (parseInt(target.dataset.parallax || "0") || parallaxMultiplier);
+          // const x = (window.innerWidth - e.pageX * speed) / 100;
+          // const y = (window.innerHeight - e.pageY * speed) / 100;
+          // target.style.transform = `translateX(${x}px) translateY(${y}px)`;
         });
       };
       window.addEventListener("mousemove", handleParallax);
