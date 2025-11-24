@@ -72,4 +72,16 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .bg-primary {
+    @apply bg-gradient-to-r from-blue-500 to-purple-600;
+  }
+
+  .text-primary {
+    @apply text-purple-400;
+  }
+
+  .ring-primary {
+    --tw-ring-color: hsl(var(--primary));
+  }
 }
