@@ -9,7 +9,7 @@ import { Skeleton } from "../ui/skeleton";
 import React, { useEffect, useState, Suspense } from "react";
 import TextType from "../ui/text-type";
 import dynamic from "next/dynamic";
-import GooeyButton from '../ui/gooey-button';
+import { Button } from '../ui/button';
 
 const Threads = dynamic(() => import('@/components/threads-background'), {
   ssr: false,
@@ -98,8 +98,12 @@ export default function HeroSection() {
                 Crafting modern digital experiences with clean design and powerful functionality.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <GooeyButton href="#contact">Get In Touch</GooeyButton>
-                <GooeyButton href="#portfolio" className="outline">Browse Projects</GooeyButton>
+              <Button asChild className="bg-secondary-gradient border-none" size="lg">
+                <Link href="#contact">Get In Touch</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="#portfolio">Browse Projects</Link>
+              </Button>
             </div>
           </div>
         </div>

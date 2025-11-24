@@ -4,197 +4,6 @@
 @tailwind utilities;
 
 @layer base {
-  .gooey-button {
-    @apply inline-block rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
-    @apply h-11 rounded-md px-8;
-    color: white;
-    text-shadow: 0 1px 1px hsl(205deg 30% 10% / 0.2);
-    position: relative;
-    z-index: 3;
-    transition: all 0.3s ease;
-    outline: none;
-    padding: 0.6em 1em;
-  }
-  
-  .gooey-button.outline {
-     @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
-     color: hsl(var(--foreground));
-  }
-  
-  .gooey-button.active {
-    color: black;
-    text-shadow: none;
-  }
-}
-
-.effect {
-  position: absolute;
-  opacity: 1;
-  pointer-events: none;
-  display: grid;
-  place-items: center;
-  z-index: 1;
-}
-
-.effect.text {
-  color: white;
-  transition: color 0.3s ease;
-  z-index: 4;
-}
-
-.effect.text.active {
-  color: black;
-}
-
-.effect.filter {
-  filter: blur(7px) contrast(100) blur(0);
-  mix-blend-mode: lighten;
-  z-index: 2;
-}
-
-.effect.filter::before {
-  content: "";
-  position: absolute;
-  inset: -75px;
-  z-index: -2;
-  background: black;
-}
-
-.effect.filter::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: white;
-  transform: scale(0);
-  opacity: 0;
-  z-index: -1;
-  border-radius: 9999px;
-}
-
-.effect.active::after {
-  animation: pill 0.3s ease both;
-}
-
-@keyframes pill {
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.particle,
-.point {
-  display: block;
-  opacity: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 9999px;
-  transform-origin: center;
-}
-
-.particle {
-  --time: 5s;
-  position: absolute;
-  top: calc(50% - 8px);
-  left: calc(50% - 8px);
-  animation: particle calc(var(--time)) ease 1 -350ms;
-}
-
-.point {
-  background: var(--color);
-  opacity: 1;
-  animation: point calc(var(--time)) ease 1 -350ms;
-}
-
-@keyframes particle {
-  0% {
-    transform: rotate(0deg) translate(calc(var(--start-x)), calc(var(--start-y)));
-    opacity: 1;
-    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
-  }
-  70% {
-    transform: rotate(calc(var(--rotate) * 0.5)) translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.2));
-    opacity: 1;
-    animation-timing-function: ease;
-  }
-  85% {
-    transform: rotate(calc(var(--rotate) * 0.66)) translate(calc(var(--end-x)), calc(var(--end-y)));
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(calc(var(--rotate) * 1.2)) translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5));
-    opacity: 1;
-  }
-}
-
-@keyframes point {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
-  }
-  25% {
-    transform: scale(calc(var(--scale) * 0.25));
-  }
-  38% {
-    opacity: 1;
-  }
-  65% {
-    transform: scale(var(--scale));
-    opacity: 1;
-    animation-timing-function: ease;
-  }
-  85% {
-    transform: scale(var(--scale));
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0);
-    opacity: 0;
-  }
-}
-
-
-.hide-cursor, .hide-cursor * {
-  cursor: none;
-}
-
-.target-cursor {
-  position: fixed;
-  width: 30px;
-  height: 30px;
-  border: 2px solid #BB86FC; 
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, border-width 0.2s;
-  z-index: 9999;
-  mix-blend-mode: difference;
-}
-
-.target-cursor.is-hovering {
-  width: 50px;
-  height: 50px;
-  border-width: 3px;
-  animation: spin linear infinite;
-}
-
-.target-cursor.is-mouse-down {
-  width: 20px;
-  height: 20px;
-}
-
-@keyframes spin {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-@layer base {
   :root {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -263,15 +72,57 @@
     @apply bg-background text-foreground;
   }
 
-  .bg-primary {
+  .bg-primary-gradient {
     @apply bg-gradient-to-r from-blue-500 to-purple-600;
   }
 
+  .bg-secondary-gradient {
+     @apply bg-gradient-to-r from-purple-600 to-indigo-700;
+  }
+  
   .text-primary {
     @apply text-purple-400;
   }
 
   .ring-primary {
     --tw-ring-color: hsl(var(--primary));
+  }
+}
+
+.hide-cursor, .hide-cursor * {
+  cursor: none;
+}
+
+.target-cursor {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #BB86FC; 
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, border-width 0.2s;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+.target-cursor.is-hovering {
+  width: 50px;
+  height: 50px;
+  border-width: 3px;
+  animation: spin linear infinite;
+}
+
+.target-cursor.is-mouse-down {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
