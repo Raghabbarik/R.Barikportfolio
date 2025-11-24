@@ -12,13 +12,11 @@ export default function GlobalBackground() {
     return (
         <div className="absolute inset-0 w-full h-full bg-background -z-10">
             <Threads
-              color={[0.4, 0.7, 0.9]}
-              amplitude={1.2}
-              distance={0.3}
+              color={[1, 1, 1]}
+              amplitude={0.5}
+              distance={0.2}
               enableMouseInteraction
             />
         </div>
     );
 }
-
-
