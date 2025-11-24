@@ -13,6 +13,7 @@ import {
   Palette,
   Server,
   Globe,
+  Users
 } from "lucide-react";
 
 export const navLinks: NavLink[] = [
@@ -20,6 +21,7 @@ export const navLinks: NavLink[] = [
   { href: "#skills", label: "Skills" },
   { href: "#services", label: "Services" },
   { href: "#portfolio", label: "Portfolio" },
+  { href: "#clients", label: "Clients" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -99,3 +101,5 @@ export const contactDetails: ContactDetail[] = [
   },
   { id: "map-pin", iconName: "MapPin", text: "Chandaka, Bhubaneswar", href: "#" },
 ];
+
+    

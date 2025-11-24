@@ -4,7 +4,7 @@
 import React from 'react';
 import Dock from './dock';
 import { navLinks } from '@/lib/data';
-import { Home, User, Briefcase, Star, MessageSquare, UserCog } from 'lucide-react';
+import { Home, User, Briefcase, Star, MessageSquare, UserCog, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { DockItemData } from './dock';
 
@@ -13,6 +13,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
   Skills: <Star />,
   Services: <Briefcase />,
   Portfolio: <Briefcase />,
+  Clients: <Users />,
   Contact: <MessageSquare />,
   Admin: <UserCog />,
   Home: <Home />,
@@ -49,3 +50,5 @@ export default function Header() {
 
   return <Dock items={items} />;
 }
+
+    

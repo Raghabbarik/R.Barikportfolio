@@ -21,6 +21,7 @@ const AboutSection = dynamic(() => import('@/components/sections/about'), { ssr:
 const SkillsSection = dynamic(() => import('@/components/sections/skills'), { ssr: false, loading: () => <SectionSkeleton /> });
 const ServicesSection = dynamic(() => import('@/components/sections/services'), { ssr: false, loading: () => <SectionSkeleton /> });
 const PortfolioSection = dynamic(() => import('@/components/sections/portfolio'), { ssr: false, loading: () => <SectionSkeleton /> });
+const ClientsSection = dynamic(() => import('@/components/sections/clients'), { ssr: false, loading: () => <SectionSkeleton /> });
 const ContactSection = dynamic(() => import('@/components/sections/contact'), { ssr: false, loading: () => <SectionSkeleton /> });
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
                     <SkillsSection />
                     <ServicesSection />
                     <PortfolioSection />
+                    <ClientsSection />
                     <ContactSection />
                 </>
             ) : (
@@ -54,3 +56,5 @@ export default function Home() {
         </div>
     );
 }
+
+    
