@@ -19,10 +19,10 @@ import {
 export const navLinks: NavLink[] = [
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
+  { href: "#clients", label: "Clients" },
   { href: "#services", label: "Services" },
   { href: "#portfolio", label: "Portfolio" },
   { href: "#contact", label: "Contact" },
-  { href: "#clients", label: "Clients" },
 ];
 
 export const skills: Skill[] = [
