@@ -35,8 +35,8 @@ export default function Home() {
                     <SkillsSection />
                     <ServicesSection />
                     <PortfolioSection />
-                    <ClientsSection />
                     <ContactSection />
+                    <ClientsSection />
                 </>
             ) : (
                 <>

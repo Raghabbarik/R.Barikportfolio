@@ -21,8 +21,8 @@ export const navLinks: NavLink[] = [
   { href: "#skills", label: "Skills" },
   { href: "#services", label: "Services" },
   { href: "#portfolio", label: "Portfolio" },
-  { href: "#clients", label: "Clients" },
   { href: "#contact", label: "Contact" },
+  { href: "#clients", label: "Clients" },
 ];
 
 export const skills: Skill[] = [
@@ -101,5 +101,3 @@ export const contactDetails: ContactDetail[] = [
   },
   { id: "map-pin", iconName: "MapPin", text: "Chandaka, Bhubaneswar", href: "#" },
 ];
-
-    
