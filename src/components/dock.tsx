@@ -110,11 +110,11 @@ function DockLabel({ children, className = '', isHovered }: DockLabelProps) {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
+          exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className={`${className} absolute -bottom-10 w-fit whitespace-pre rounded-md border border-border/50 bg-card px-2 py-0.5 text-xs text-foreground`}
+          className={`${className} absolute -top-10 w-fit whitespace-pre rounded-md border border-border/50 bg-card px-2 py-0.5 text-xs text-foreground`}
           role="tooltip"
         >
           {children}
@@ -164,7 +164,7 @@ export default function Dock({
     mouseX.set(e.touches[0].pageX);
   };
   
-  const containerClasses = "fixed bottom-4 left-1/2 -translate-x-1/2 z-50";
+  const containerClasses = "fixed top-4 left-1/2 -translate-x-1/2 z-50";
   const dockClasses = "flex items-end gap-2 sm:gap-4 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md p-2 shadow-2xl";
 
   return (
