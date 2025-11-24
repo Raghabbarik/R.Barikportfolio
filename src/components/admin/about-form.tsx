@@ -44,7 +44,7 @@ const formSchema = z.object({
   profileImageHint: z.string().min(1, "Profile image hint is required."),
   aboutImageUrl: z.string().url("Please enter a valid URL.").or(z.literal("")),
   aboutImageHint: z.string().min(1, "About image hint is required."),
-  resumeUrl: z.string().url("Please upload a resume.").or(z.literal("")),
+  resumeUrl: z.string().url("Please upload a resume or provide a valid URL.").or(z.literal("")),
 });
 
 type AboutFormData = z.infer<typeof formSchema>;
