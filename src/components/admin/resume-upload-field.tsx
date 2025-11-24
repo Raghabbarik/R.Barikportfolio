@@ -23,6 +23,7 @@ export function ResumeUploadField({ name, label }: ResumeUploadFieldProps) {
   
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [urlInput, setUrlInput] = useState("");
 
   const fileUrl = watch(name);
 
@@ -45,6 +46,10 @@ export function ResumeUploadField({ name, label }: ResumeUploadFieldProps) {
     setValue(name, "", { shouldValidate: true });
   };
 
+  const handleSetUrl = () => {
+    setValue(name, urlInput, { shouldValidate: true });
+  };
+
   return (
     <FormItem className="space-y-4 rounded-lg border p-4">
       <FormLabel>{label}</FormLabel>
@@ -53,7 +58,7 @@ export function ResumeUploadField({ name, label }: ResumeUploadFieldProps) {
             <div className="flex items-center gap-3">
                 <FileText className="h-8 w-8 text-primary" />
                 <div className="flex flex-col">
-                    <span className="text-sm font-medium">Resume uploaded</span>
+                    <span className="text-sm font-medium">Resume available</span>
                     <Link href={fileUrl} target="_blank" className="text-xs text-muted-foreground hover:underline">
                         View resume
                     </Link>
@@ -95,6 +100,21 @@ export function ResumeUploadField({ name, label }: ResumeUploadFieldProps) {
         accept=".pdf"
         disabled={isUploading}
       />
+       <div className="space-y-2">
+        <div className="flex items-center gap-2">
+           <LinkIcon className="h-4 w-4 text-muted-foreground" />
+           <p className="text-sm text-muted-foreground">Or provide a URL</p>
+        </div>
+        <div className="flex gap-2">
+          <Input 
+            type="url"
+            placeholder="https://example.com/resume.pdf" 
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+          />
+          <Button type="button" variant="secondary" onClick={handleSetUrl}>Set URL</Button>
+        </div>
+      </div>
       <FormMessage />
     </FormItem>
   );
