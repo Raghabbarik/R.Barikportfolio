@@ -872,5 +872,3 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
 };
 
 export default Ballpit;
-
-    
