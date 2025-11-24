@@ -853,11 +853,12 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const spheresInstanceRef = useRef<CreateBallpitReturn | null>(null);
 
+  const allProps = { followCursor, ...props };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const allProps = { followCursor, ...props };
     spheresInstanceRef.current = createBallpit(canvas, allProps);
 
     return () => {
@@ -865,9 +866,11 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
         spheresInstanceRef.current.dispose();
       }
     };
-  }, [followCursor, props]);
+  }, [allProps]);
 
-  return <canvas className={className} ref={canvasRef} />;
+  return <canvas className={className} style={{mixBlendMode: 'difference'}} ref={canvasRef} />;
 };
 
 export default Ballpit;
+
+    
