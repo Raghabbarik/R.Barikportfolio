@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useRef, useEffect } from 'react';
 import {
@@ -868,7 +869,7 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followCursor, props]);
 
-  return <canvas className={`${className} absolute top-0 left-0 w-full h-full -z-10`} ref={canvasRef} />;
+  return <canvas className={`${className} w-full h-full`} ref={canvasRef} />;
 };
 
 export default Ballpit;
