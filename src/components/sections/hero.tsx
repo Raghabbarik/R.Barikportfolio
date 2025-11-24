@@ -48,9 +48,9 @@ export default function HeroSection() {
 
   return (
     <section id="hero" className="relative w-full h-screen min-h-[800px] flex items-center justify-center overflow-hidden bg-background">
-       <div className="absolute inset-0 w-full h-full z-0 opacity-20 pointer-events-none">
+       <div className="absolute inset-0 w-full h-full z-0 opacity-40 pointer-events-none">
             <Threads
-              color={[1, 1, 1]}
+              color={[0.53, 0.2, 1.0]}
               amplitude={0.5}
               distance={0.2}
               enableMouseInteraction
