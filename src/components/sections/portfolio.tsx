@@ -44,12 +44,8 @@ export default function PortfolioSection() {
        <section id="portfolio" className="w-full py-16 md:py-24 lg:py-32">
         <div className="container grid lg:grid-cols-2 gap-12 items-center px-4 md:px-6">
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              My Projects
-            </h2>
-            <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed">
-              A selection of projects I've worked on.
-            </p>
+            <Skeleton className="h-10 w-2/3" />
+            <Skeleton className="h-24 w-full" />
           </div>
           <div className="relative h-[400px] lg:h-[500px] w-full flex items-center justify-center">
             <Skeleton className="h-full w-full max-w-lg" />
@@ -71,7 +67,7 @@ export default function PortfolioSection() {
               A selection of projects I've worked on. Click on a card to see details or view the live demo.
             </p>
         </div>
-        <div className="relative h-[400px] lg:h-[500px] w-full">
+        <div className="relative h-[400px] lg:h-[500px] w-full flex items-center justify-center">
             {projects.length > 0 ? (
                 <CardSwap 
                     width={cardWidth} 
