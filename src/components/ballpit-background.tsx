@@ -1,67 +1,125 @@
-{
-  "name": "nextn",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack -p 9002",
-    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
-    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
-    "build": "NODE_ENV=production next build",
-    "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@emailjs/browser": "^4.4.1",
-    "@genkit-ai/google-genai": "^1.20.0",
-    "@genkit-ai/next": "^1.20.0",
-    "@hookform/resolvers": "^4.1.3",
-    "@radix-ui/react-alert-dialog": "^1.1.6",
-    "@radix-ui/react-avatar": "^1.1.3",
-    "@radix-ui/react-checkbox": "^1.1.4",
-    "@radix-ui/react-dialog": "^1.1.6",
-    "@radix-ui/react-dropdown-menu": "^2.1.6",
-    "@radix-ui/react-label": "^2.1.2",
-    "@radix-ui/react-popover": "^1.1.6",
-    "@radix-ui/react-progress": "^1.1.2",
-    "@radix-ui/react-scroll-area": "^1.2.3",
-    "@radix-ui/react-select": "^2.1.6",
-    "@radix-ui/react-separator": "^1.1.2",
-    "@radix-ui/react-slider": "^1.2.3",
-    "@radix-ui/react-slot": "^1.2.3",
-    "@radix-ui/react-switch": "^1.1.3",
-    "@radix-ui/react-tabs": "^1.1.3",
-    "@radix-ui/react-toast": "^1.2.6",
-    "@radix-ui/react-tooltip": "^1.1.8",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "dotenv": "^16.5.0",
-    "firebase": "^11.9.1",
-    "framer-motion": "^11.5.7",
-    "genkit": "^1.20.0",
-    "gsap": "^3.12.5",
-    "lucide-react": "^0.475.0",
-    "next": "15.3.3",
-    "ogl": "^1.0.2",
-    "patch-package": "^8.0.0",
-    "postprocessing": "^6.35.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-hook-form": "^7.54.2",
-    "swr": "^2.2.5",
-    "tailwind-merge": "^3.0.1",
-    "tailwindcss-animate": "^1.0.7",
-    "three": "^0.165.0",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@types/three": "^0.165.0",
-    "genkit-cli": "^1.20.0",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+
+'use client';
+import * as THREE from 'three';
+import { useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import {
+  BallCollider,
+  Physics,
+  RapierRigidBody,
+  RigidBody,
+  RigidBodyProps,
+} from '@react-three/rapier';
+import { useTheme } from 'next-themes';
+
+const Ball = ({
+  vec = new THREE.Vector3(),
+  rigidbody,
+  ...props
+}: {
+  vec?: THREE.Vector3;
+  rigidbody: React.RefObject<RapierRigidBody>;
+} & RigidBodyProps) => {
+  useFrame((_, delta) => {
+    if (rigidbody.current) {
+      vec.set(0, 0, -5); // Move towards the back
+      const impulse = vec.multiplyScalar(delta * 2);
+      rigidbody.current.applyImpulse(impulse, true);
+    }
+  });
+
+  return (
+    <RigidBody
+      ref={rigidbody}
+      colliders="ball"
+      linearDamping={4}
+      angularDamping={1}
+      friction={0}
+      restitution={1.1}
+      {...props}
+    >
+      <BallCollider args={[1]} />
+    </RigidBody>
+  );
+};
+
+const Pointer = ({ vec = new THREE.Vector3(), rigidbody, ...props }: {
+  vec?: THREE.Vector3;
+  rigidbody: React.RefObject<RapierRigidBody>;
+} & RigidBodyProps) => {
+  useFrame(({ pointer, viewport }) => {
+    if (rigidbody.current) {
+      vec.set(
+        (pointer.x * viewport.width) / 2,
+        (pointer.y * viewport.height) / 2,
+        0,
+      );
+      rigidbody.current.setNextKinematicTranslation(vec);
+    }
+  });
+
+  return (
+    <RigidBody
+      ref={rigidbody}
+      type="kinematicPosition"
+      colliders="ball"
+      {...props}
+    />
+  );
+};
+
+export default function Ballpit() {
+  const { resolvedTheme } = useTheme();
+  const rigidbody = useRef<RapierRigidBody>(null);
+  const pointer = useRef<RapierRigidBody>(null);
+  const colors = {
+    light: [
+      '#67e8f9',
+      '#a5b4fc',
+      '#d8b4fe',
+    ],
+    dark: [
+      '#67e8f9',
+      '#a5b4fc',
+      '#d8b4fe',
+    ],
+  };
+
+  return (
+    <div className='absolute inset-0 -z-10'>
+      <Canvas
+        camera={{ position: [0, 0, 15], fov: 25, near: 1, far: 40 }}
+      >
+        <ambientLight intensity={Math.PI} />
+        <Physics gravity={[0, 0, 0]}>
+          <Pointer rigidbody={pointer} />
+          {Array.from({ length: 40 }, (_, i) => (
+            <Ball
+              key={i}
+              rigidbody={rigidbody}
+              position={[
+                THREE.MathUtils.randFloatSpread(15),
+                THREE.MathUtils.randFloatSpread(15),
+                THREE.MathUtils.randFloatSpread(15),
+              ]}
+            >
+              <mesh>
+                <sphereGeometry args={[1]} />
+                <meshStandardMaterial
+                  color={
+                    colors[
+                      (resolvedTheme as keyof typeof colors) ?? 'dark'
+                    ][Math.floor(Math.random() * 3)]
+                  }
+                  emissive='black'
+                  roughness={0.1}
+                  metalness={0.75}
+                />
+              </mesh>
+            </Ball>
+          ))}
+        </Physics>
+      </Canvas>
+    </div>
+  );
 }
