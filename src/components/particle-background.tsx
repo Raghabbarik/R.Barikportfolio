@@ -48,7 +48,7 @@ const ParticleBackground = () => {
                 particles.push({
                     x: Math.random() * rect.width,
                     y: Math.random() * rect.height,
-                    r: Math.random() * 4 + 1, // radius
+                    r: Math.random() * 6 + 2, // radius
                     s: Math.random() * 0.5 + 0.2 // speed
                 });
             }
