@@ -478,7 +478,7 @@ class Y extends MeshPhysicalMaterial {
 
 const XConfig = {
   count: 200,
-  colors: [0x5432a2, 0x8221a8, 0x9f19ad, 0xbf18b0, 0xdf1bb0],
+  colors: [0, 0, 0],
   ambientColor: 0xffffff,
   ambientIntensity: 1,
   lightIntensity: 200,
@@ -869,7 +869,7 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followCursor, props]);
 
-  return <canvas className={`${className} w-full h-full`} ref={canvasRef} />;
+  return <canvas className={className} ref={canvasRef} />;
 };
 
 export default Ballpit;
