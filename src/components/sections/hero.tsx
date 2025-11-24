@@ -46,7 +46,7 @@ export default function HeroSection() {
           <Suspense fallback={<Skeleton className="w-full h-full" />}>
             <Threads
               color={[0.55, 0.22, 0.96]}
-              amplitude={1.5}
+              amplitude={2.5}
               distance={0.2}
               enableMouseInteraction={true}
             />
