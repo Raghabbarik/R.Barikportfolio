@@ -75,7 +75,7 @@ function DockItem({
       onFocus={() => isHovered.set(1)}
       onBlur={() => isHovered.set(0)}
       onClick={onClick}
-      className={`relative inline-flex cursor-pointer items-center justify-center rounded-full bg-primary border-border/20 border-2 shadow-lg cursor-target ${className}`}
+      className={`relative inline-flex cursor-pointer items-center justify-center rounded-full bg-secondary-gradient shadow-lg cursor-target ${className}`}
       tabIndex={0}
       role="button"
       aria-haspopup="true"
@@ -165,7 +165,7 @@ export default function Dock({
   };
   
   const containerClasses = "fixed top-4 left-1/2 -translate-x-1/2 z-50";
-  const dockClasses = "flex items-end gap-2 sm:gap-3 rounded-2xl bg-secondary-gradient backdrop-blur-md p-1.5 shadow-2xl";
+  const dockClasses = "flex items-end gap-2 sm:gap-3 rounded-2xl bg-card/80 backdrop-blur-md p-1.5 border border-border/20 shadow-2xl";
 
   return (
     <div className={containerClasses}>
