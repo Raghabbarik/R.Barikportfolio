@@ -9,6 +9,7 @@ import { useData } from "@/lib/data-context";
 import { Skeleton } from "../ui/skeleton";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import TextType from "../ui/text-type";
 
 const Hyperspeed = dynamic(() => import('../hyperspeed-background'), {
   ssr: false,
@@ -55,8 +56,16 @@ export default function HeroSection() {
                     <Hand className="h-5 w-5 text-primary animate-bounce"/>
                     <span>Hey, I'm {firstName}</span>
                 </div>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter">
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Web Developer</span>
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter min-h-[84px] md:min-h-[168px] lg:min-h-[252px]">
+                   <TextType
+                    as="span"
+                    text={["Web Developer", "UI/UX Designer", "Creator"]}
+                    typingSpeed={100}
+                    deletingSpeed={50}
+                    pauseDuration={2000}
+                    className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
+                    cursorClassName="text-primary"
+                  />
                 </h1>
                 <p className="max-w-md text-muted-foreground md:text-lg">
                     Crafting modern digital experiences with clean design and powerful functionality.
