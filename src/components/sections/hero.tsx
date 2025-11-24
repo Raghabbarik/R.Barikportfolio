@@ -64,7 +64,7 @@ export default function HeroSection() {
                 <Hand className="h-5 w-5 text-primary animate-bounce"/>
                 <span>Hey, I'm {firstName}</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tighter">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter">
                <TextType
                 as="span"
                 text={["Web Developer", "UI/UX Designer", "Creator"]}
@@ -82,7 +82,7 @@ export default function HeroSection() {
                 <Button asChild size="lg" className="w-full sm:w-auto">
                     <Link href="#contact">Get In Touch</Link>
                 </Button>
-                <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
+                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
                     <Link href="#portfolio">Browse Projects</Link>
                 </Button>
             </div>
