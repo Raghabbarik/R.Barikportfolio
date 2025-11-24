@@ -165,7 +165,7 @@ export default function Dock({
   };
   
   const containerClasses = "fixed top-4 left-1/2 -translate-x-1/2 z-50";
-  const dockClasses = "flex items-end gap-2 sm:gap-3 rounded-2xl border-border/20 border-2 bg-primary/20 backdrop-blur-md p-1.5 shadow-2xl";
+  const dockClasses = "flex items-end gap-2 sm:gap-3 rounded-2xl border-border/20 border-2 bg-card/80 backdrop-blur-md p-1.5 shadow-2xl";
 
   return (
     <div className={containerClasses}>
