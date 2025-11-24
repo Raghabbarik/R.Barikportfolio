@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { DataProvider } from "@/lib/data-context";
 import TargetCursor from "@/components/target-cursor";
 import { FirebaseProvider } from "@/firebase/provider";
+import GlobalBackground from "@/components/global-background";
 
 
 const poppins = Poppins({
@@ -42,6 +43,7 @@ export default function RootLayout({
       >
         <FirebaseProvider>
           <DataProvider>
+            <GlobalBackground />
             <div className="relative z-10 flex flex-col min-h-screen">
               <TargetCursor 
                 spinDuration={2}
