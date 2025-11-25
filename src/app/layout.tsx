@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { DataProvider } from "@/lib/data-context";
 import TargetCursor from "@/components/target-cursor";
 import { FirebaseProvider } from "@/firebase/provider";
+import Script from "next/script";
 
 
 const poppins = Poppins({
@@ -52,6 +53,7 @@ export default function RootLayout({
             </div>
           </DataProvider>
         </FirebaseProvider>
+        <Script src="//code.tidio.co/wv58an6khjegrz5udrqihepvbvhlhhs7.js" async />
       </body>
     </html>
   );
