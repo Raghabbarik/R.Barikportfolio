@@ -40,12 +40,7 @@ export default function Header() {
             icon: iconMap[link.label] || <Briefcase />,
             label: link.label,
             onClick: () => scrollToSection(link.href),
-        })),
-        {
-          icon: <UserCog />,
-          label: 'Admin',
-          onClick: () => router.push('/admin'),
-        }
+        }))
     ];
 
   return <Dock items={items} />;
