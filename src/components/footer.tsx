@@ -42,7 +42,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-card py-6">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container relative mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Raghab Barik. All rights reserved.
@@ -70,7 +70,7 @@ export default function Footer() {
                 })}
             </div>
         </div>
-        <div className="mt-4 flex justify-center">
+        <div className="absolute bottom-0 right-6 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:right-auto md:left-1/2 md:-translate-x-1/2">
             <VisitorCounter />
         </div>
       </div>
