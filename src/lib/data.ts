@@ -89,6 +89,12 @@ export const contactDetails: ContactDetail[] = [
   },
   { id: "phone", iconName: "Phone", text: "7205376243", href: "tel:7205376243" },
   {
+    id: "github",
+    iconName: "Github",
+    text: "raghab-barik",
+    href: "https://github.com/raghab-barik",
+  },
+  {
     id: "instagram",
     iconName: "Instagram",
     text: "@mr_raghab_786",

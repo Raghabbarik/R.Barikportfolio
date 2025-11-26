@@ -50,7 +50,7 @@ export default function Footer() {
             <div className="flex items-center gap-4">
             {contactDetails
                 .filter((detail) =>
-                ["Instagram", "Linkedin"].includes(detail.iconName)
+                ["Instagram", "Linkedin", "Github"].includes(detail.iconName)
                 )
                 .map((detail) => {
                 const Icon = getIcon(detail.iconName);
