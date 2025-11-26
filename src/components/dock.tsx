@@ -138,11 +138,13 @@ export default function Dock({
   items,
   className = '',
   spring = { mass: 0.1, stiffness: 150, damping: 12 },
-  magnification = 55,
   distance = 80,
-  baseItemSize = 40
 }: DockProps) {
   const mouseX = useMotionValue(Infinity);
+  const isMobile = useMediaQuery('(max-width: 640px)');
+
+  const baseItemSize = isMobile ? 36 : 40;
+  const magnification = isMobile ? 48 : 55;
 
   const handleMouseMove = (e: React.MouseEvent) => {
     mouseX.set(e.pageX);
