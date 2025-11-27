@@ -9,6 +9,7 @@ import TargetCursor from "@/components/target-cursor";
 import { FirebaseProvider } from "@/firebase/provider";
 import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 
 const poppins = Poppins({
@@ -55,6 +56,7 @@ export default function RootLayout({
                   hideDefaultCursor={true}
                   parallaxOn={true}
                 />
+                <ThemeToggle />
                 {children}
                 <Toaster />
               </div>

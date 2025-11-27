@@ -8,7 +8,6 @@ import { Skeleton } from "./ui/skeleton";
 import { useEffect, useState } from "react";
 import { useVisitorCount } from "@/hooks/use-visitor-count";
 import { Eye } from "lucide-react";
-import { ThemeToggle } from "./theme-toggle";
 
 function VisitorCounter() {
     const visitorCount = useVisitorCount();
@@ -46,7 +45,6 @@ export default function Footer() {
       <div className="container relative mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex items-center gap-4">
-                <ThemeToggle />
                 <p className="text-sm text-muted-foreground">
                 © {new Date().getFullYear()} Raghab Barik. All rights reserved.
                 </p>
