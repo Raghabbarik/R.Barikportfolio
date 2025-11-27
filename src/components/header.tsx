@@ -1,6 +1,7 @@
+
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Dock from './dock';
 import { navLinks } from '@/lib/data';
 import { Home, User, Briefcase, Star, MessageSquare, UserCog, Users, Sun, Moon } from 'lucide-react';
@@ -23,6 +24,11 @@ const iconMap: { [key: string]: React.ReactNode } = {
 export default function Header() {
     const router = useRouter();
     const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const scrollToSection = (id: string) => {
         const element = document.querySelector(id);
@@ -43,11 +49,11 @@ export default function Header() {
             onClick: () => scrollToSection(link.href),
         })),
         {
-          icon: theme === 'light' ? <Moon /> : <Sun />,
-          label: theme === 'light' ? 'Dark Mode' : 'Light Mode',
+          icon: mounted ? (theme === 'light' ? <Moon /> : <Sun />) : <Sun />,
+          label: mounted ? (theme === 'light' ? 'Dark Mode' : 'Light Mode') : 'Toggle Theme',
           onClick: () => setTheme(theme === 'light' ? 'dark' : 'light'),
         }
-    ];
+    ].filter(item => mounted || (item.label !== 'Dark Mode' && item.label !== 'Light Mode'));
 
   return <Dock items={items} />;
 }

@@ -37,6 +37,7 @@ export default function ClientsSection() {
     }, []);
 
     useEffect(() => {
+        // Only run this effect on the client, after the component has mounted.
         if (mounted) {
             setLogos(getLogos(theme));
         }
