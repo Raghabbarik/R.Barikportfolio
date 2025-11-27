@@ -10,7 +10,6 @@ import { FirebaseProvider } from "@/firebase/provider";
 import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
-import SmoothScrollProvider from "@/components/smooth-scroll-provider";
 
 
 const poppins = Poppins({
@@ -43,29 +42,27 @@ export default function RootLayout({
           poppins.variable
         )}
       >
-        <SmoothScrollProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <FirebaseProvider>
-              <DataProvider>
-                <div className="relative z-10 flex flex-col min-h-screen">
-                  <TargetCursor 
-                    spinDuration={2}
-                    hideDefaultCursor={true}
-                    parallaxOn={true}
-                  />
-                  <ThemeToggle />
-                  {children}
-                  <Toaster />
-                </div>
-              </DataProvider>
-            </FirebaseProvider>
-          </ThemeProvider>
-        </SmoothScrollProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <FirebaseProvider>
+            <DataProvider>
+              <div className="relative z-10 flex flex-col min-h-screen">
+                <TargetCursor 
+                  spinDuration={2}
+                  hideDefaultCursor={true}
+                  parallaxOn={true}
+                />
+                <ThemeToggle />
+                {children}
+                <Toaster />
+              </div>
+            </DataProvider>
+          </FirebaseProvider>
+        </ThemeProvider>
         <Script src="//code.tidio.co/wv58an6khjegrz5udrqihepvbvhlhhs7.js" async />
       </body>
     </html>
