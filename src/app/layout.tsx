@@ -9,6 +9,7 @@ import TargetCursor from "@/components/target-cursor";
 import { FirebaseProvider } from "@/firebase/provider";
 import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 
 const poppins = Poppins({
@@ -50,6 +51,9 @@ export default function RootLayout({
           <FirebaseProvider>
             <DataProvider>
               <div className="relative z-10 flex flex-col min-h-screen">
+                 <div className="fixed top-4 right-4 z-[100]">
+                  <ThemeToggle />
+                </div>
                 <TargetCursor 
                   spinDuration={2}
                   hideDefaultCursor={true}

@@ -6,7 +6,6 @@ import Dock from './dock';
 import { navLinks } from '@/lib/data';
 import { Home, User, Briefcase, Star, MessageSquare, UserCog, Users } from 'lucide-react';
 import type { DockItemData } from './dock';
-import { ThemeToggle } from './theme-toggle';
 
 const iconMap: { [key: string]: React.ReactNode } = {
   About: <User />,
@@ -47,11 +46,13 @@ export default function Header() {
         })),
     ];
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 px-4">
-      <div className="relative w-full max-w-7xl mx-auto flex justify-center">
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
         <Dock items={items} />
-      </div>
     </header>
   );
 }
