@@ -13,6 +13,7 @@ import PortfolioSection from "@/components/sections/portfolio";
 import ClientsSection from "@/components/sections/clients";
 import ContactSection from "@/components/sections/contact";
 import CertificatesSection from "@/components/sections/certificates";
+import ThoughtsSection from "@/components/sections/thoughts";
 
 const SectionSkeleton = () => (
   <section className="w-full py-12 md:py-16 lg:py-20">
@@ -38,11 +39,13 @@ export default function Home() {
                         <ClientsSection />
                         <PortfolioSection />
                         <CertificatesSection />
+                        <ThoughtsSection />
                         <ContactSection />
                     </>
                 ) : (
                     <>
                         <section id="hero" className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden"><Skeleton className="h-full w-full" /></section>
+                        <SectionSkeleton />
                         <SectionSkeleton />
                         <SectionSkeleton />
                         <SectionSkeleton />

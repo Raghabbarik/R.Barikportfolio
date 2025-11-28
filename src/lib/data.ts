@@ -1,4 +1,5 @@
-import type { NavLink, Service, Skill, Project, About, ContactDetail, Certificate } from "@/lib/definitions";
+
+import type { NavLink, Service, Skill, Project, About, ContactDetail, Certificate, Thought } from "@/lib/definitions";
 import {
   Code,
   PenTool,
@@ -89,6 +90,29 @@ export const certificates: Certificate[] = [
       imageHint: "certificate presentation",
       category: "other",
     },
+];
+
+export const thoughts: Thought[] = [
+    {
+        id: "why-i-love-building-ai-projects",
+        title: "Why I Love Building AI Projects",
+        excerpt: "Working on AI-based systems like mammogram cancer detection has taught me how impactful technology can be when applied to healthcare. Combining deep learning with real-world problems is my favorite way to innovate.",
+        imageUrl: "https://picsum.photos/seed/thought1/800/450",
+        imageHint: "AI abstract",
+        date: "2025-11-20",
+        readTime: 5,
+        href: "#"
+    },
+    {
+        id: "the-beauty-of-simple-code",
+        title: "The Beauty of Simple Code",
+        excerpt: "Clean code isn't just about fewer lines — it's about clarity. Elegance in code feels like poetry to me — each function should have rhythm and purpose.",
+        imageUrl: "https://picsum.photos/seed/thought2/800/450",
+        imageHint: "code simple",
+        date: "2025-11-15",
+        readTime: 7,
+        href: "#"
+    }
 ];
 
 export const about: About = {

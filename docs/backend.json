@@ -56,6 +56,22 @@
       },
       "required": ["id", "title", "issuer", "year", "imageUrl", "imageHint", "category"]
     },
+    "Thought": {
+      "title": "Thought",
+      "description": "Represents a blog post or article.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "readTime": { "type": "number" },
+        "imageUrl": { "type": "string", "format": "uri" },
+        "imageHint": { "type": "string" },
+        "href": { "type": "string", "format": "uri" }
+      },
+      "required": ["id", "title", "excerpt", "date", "readTime", "imageHint", "href"]
+    },
     "About": {
       "title": "About",
       "description": "Content for the about section.",
@@ -105,6 +121,7 @@
       "properties": {
         "projects": { "type": "array", "items": { "$ref": "#/entities/Project" } },
         "certificates": { "type": "array", "items": { "$ref": "#/entities/Certificate" } },
+        "thoughts": { "type": "array", "items": { "$ref": "#/entities/Thought" } },
         "skills": { "type": "array", "items": { "$ref": "#/entities/Skill" } },
         "services": { "type": "array", "items": { "$ref": "#/entities/Service" } },
         "about": { "$ref": "#/entities/About" },

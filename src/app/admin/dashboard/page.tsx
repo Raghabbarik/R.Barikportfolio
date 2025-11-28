@@ -17,6 +17,7 @@ import { ProjectForm } from "@/components/admin/project-form";
 import { ServiceForm } from "@/components/admin/service-form";
 import { SkillForm } from "@/components/admin/skill-form";
 import { CertificateForm } from "@/components/admin/certificate-form";
+import { ThoughtForm } from "@/components/admin/thought-form";
 import type {
     About,
     ContactDetail,
@@ -24,6 +25,7 @@ import type {
     Service,
     Skill,
     Certificate,
+    Thought,
 } from "@/lib/definitions";
 import { useData } from "@/lib/data-context";
 import { PlusCircle, Save, Loader2, Trash2, Edit } from "lucide-react";
@@ -260,6 +262,78 @@ function CertificatesTab() {
                   certificate={certificate}
                   onSave={handleSave}
                   onDelete={() => handleDelete(certificate.id)}
+              />
+          ))}
+      </div>
+    </div>
+  );
+}
+
+function ThoughtsTab() {
+  const { thoughts, setThoughts } = useData();
+  const { toast } = useToast();
+
+  const handleSave = (updatedThought: Thought) => {
+    setThoughts((prev) => {
+        const exists = prev.some(c => c.id === updatedThought.id);
+        if (exists) {
+            return prev.map((c) => (c.id === updatedThought.id ? updatedThought : c));
+        }
+        return [updatedThought, ...prev];
+    });
+    toast({
+      title: "Thought Saved!",
+      description: `The thought "${updatedThought.title}" has been saved.`,
+    });
+  };
+
+  const handleDelete = (thoughtId: string) => {
+    setThoughts((prev) => prev.filter((c) => c.id !== thoughtId));
+    toast({
+      variant: "destructive",
+      title: "Thought Deleted",
+      description: "The thought has been removed.",
+    });
+  };
+
+  const handleAdd = () => {
+    const newThought: Thought = {
+      id: `new-thought-${new Date().getTime()}`,
+      title: "New Thought",
+      excerpt: "A brief summary of your thought.",
+      date: new Date().toISOString().split('T')[0],
+      readTime: 5,
+      imageUrl: "",
+      imageHint: "",
+      href: "#",
+    };
+    setThoughts((prev) => [newThought, ...prev]);
+  };
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">My Thoughts</h2>
+          <p className="text-muted-foreground">
+            Manage your blog posts and articles.
+          </p>
+        </div>
+         <Button size="sm" className="h-8 gap-1" onClick={handleAdd}>
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Add Thought
+            </span>
+        </Button>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {thoughts.map((thought) => (
+              <ThoughtForm
+                  key={thought.id} 
+                  thought={thought}
+                  onSave={handleSave}
+                  onDelete={() => handleDelete(thought.id)}
               />
           ))}
       </div>
@@ -540,6 +614,7 @@ export default function DashboardPage() {
             <TabsList className="grid w-max grid-flow-col gap-4">
               <TabsTrigger value="projects">Projects</TabsTrigger>
               <TabsTrigger value="certificates">Certificates</TabsTrigger>
+              <TabsTrigger value="thoughts">Thoughts</TabsTrigger>
               <TabsTrigger value="skills">Skills</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
@@ -552,6 +627,9 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent value="certificates" className="mt-4">
           <CertificatesTab />
+        </TabsContent>
+         <TabsContent value="thoughts" className="mt-4">
+          <ThoughtsTab />
         </TabsContent>
         <TabsContent value="skills" className="mt-4">
           <SkillsTab />

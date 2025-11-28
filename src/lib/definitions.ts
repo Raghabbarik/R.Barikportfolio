@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from "lucide-react";
 
 export type NavLink = {
@@ -38,6 +39,17 @@ export type Certificate = {
   imageHint: string;
   category: "technical" | "other";
   href?: string;
+};
+
+export type Thought = {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  readTime: number;
+  imageUrl: string;
+  imageHint: string;
+  href: string;
 };
 
 export type About = {
