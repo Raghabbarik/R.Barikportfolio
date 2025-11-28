@@ -16,7 +16,7 @@ import CertificatesSection from "@/components/sections/certificates";
 import ThoughtsSection from "@/components/sections/thoughts";
 
 const SectionSkeleton = () => (
-  <section className="w-full py-12 md:py-16 lg:py-20">
+  <section className="w-full py-8 md:py-10 lg:py-12">
     <div className="container px-4 md:px-6">
       <Skeleton className="h-[400px] w-full" />
     </div>
@@ -28,8 +28,8 @@ export default function Home() {
 
     return (
         <div className="flex min-h-[100dvh] flex-col bg-transparent">
+            <Header />
             <main className="flex-1">
-                <Header />
                 {isDataLoaded ? (
                     <>
                         <HeroSection />
