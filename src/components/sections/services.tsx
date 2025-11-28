@@ -29,7 +29,7 @@ export default function ServicesSection() {
   }
 
   return (
-    <section id="services" className="w-full py-16 md:py-24 lg:py-32 bg-card">
+    <section id="services" className="w-full pt-16 md:pt-24 lg:pt-32 pb-8 md:pb-12 lg:pb-16 bg-card">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-3">

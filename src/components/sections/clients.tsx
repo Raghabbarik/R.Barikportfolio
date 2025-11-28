@@ -44,7 +44,7 @@ export default function ClientsSection() {
     }, [theme, mounted]);
     
     return (
-        <section id="clients" className="w-full py-16 md:py-24 lg:py-32">
+        <section id="clients" className="w-full pt-8 md:pt-12 lg:pt-16 pb-16 md:pb-24 lg:pb-32">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
                     <div className="space-y-3">
