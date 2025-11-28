@@ -40,6 +40,22 @@
       },
       "required": ["id", "title", "description", "technologies", "imageHint"]
     },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Represents a certificate of achievement or participation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "issuer": { "type": "string" },
+        "year": { "type": "string" },
+        "imageUrl": { "type": "string", "format": "uri" },
+        "imageHint": { "type": "string" },
+        "category": { "type": "string", "enum": ["technical", "other"] },
+        "href": { "type": "string", "format": "uri" }
+      },
+      "required": ["id", "title", "issuer", "year", "imageUrl", "imageHint", "category"]
+    },
     "About": {
       "title": "About",
       "description": "Content for the about section.",
@@ -88,6 +104,7 @@
       "type": "object",
       "properties": {
         "projects": { "type": "array", "items": { "$ref": "#/entities/Project" } },
+        "certificates": { "type": "array", "items": { "$ref": "#/entities/Certificate" } },
         "skills": { "type": "array", "items": { "$ref": "#/entities/Skill" } },
         "services": { "type": "array", "items": { "$ref": "#/entities/Service" } },
         "about": { "$ref": "#/entities/About" },

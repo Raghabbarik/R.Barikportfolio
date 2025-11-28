@@ -1,5 +1,4 @@
-
-import type { NavLink, Service, Skill, Project, About, ContactDetail } from "@/lib/definitions";
+import type { NavLink, Service, Skill, Project, About, ContactDetail, Certificate } from "@/lib/definitions";
 import {
   Code,
   PenTool,
@@ -13,7 +12,8 @@ import {
   Palette,
   Server,
   Globe,
-  Users
+  Users,
+  Award
 } from "lucide-react";
 
 export const navLinks: NavLink[] = [
@@ -60,6 +60,36 @@ export const services: Service[] = [
 ];
 
 export const projects: Project[] = [];
+
+export const certificates: Certificate[] = [
+    {
+      id: "flipkart-2022",
+      title: "Flipkart Hackathon",
+      issuer: "Flipkart",
+      year: "2022",
+      imageUrl: "https://picsum.photos/seed/cert1/600/400",
+      imageHint: "certificate participation",
+      category: "technical",
+    },
+    {
+      id: "solution-challenge-2023",
+      title: "Solution Challenge",
+      issuer: "Google Developers",
+      year: "2023",
+      imageUrl: "https://picsum.photos/seed/cert2/600/400",
+      imageHint: "certificate achievement",
+      category: "technical",
+    },
+    {
+      id: "adira-2025",
+      title: "ADira",
+      issuer: "SCET AI Club",
+      year: "2025",
+      imageUrl: "https://picsum.photos/seed/cert3/600/400",
+      imageHint: "certificate presentation",
+      category: "other",
+    },
+];
 
 export const about: About = {
   tagline: "About Me",

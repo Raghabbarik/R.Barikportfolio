@@ -16,12 +16,14 @@ import { ContactForm as AdminContactForm } from "@/components/admin/contact-form
 import { ProjectForm } from "@/components/admin/project-form";
 import { ServiceForm } from "@/components/admin/service-form";
 import { SkillForm } from "@/components/admin/skill-form";
+import { CertificateForm } from "@/components/admin/certificate-form";
 import type {
     About,
     ContactDetail,
     Project,
     Service,
     Skill,
+    Certificate,
 } from "@/lib/definitions";
 import { useData } from "@/lib/data-context";
 import { PlusCircle, Save, Loader2, Trash2, Edit } from "lucide-react";
@@ -190,6 +192,77 @@ function ProjectsTab() {
                 </DialogContent>
             )}
        </Dialog>
+    </div>
+  );
+}
+
+function CertificatesTab() {
+  const { certificates, setCertificates } = useData();
+  const { toast } = useToast();
+
+  const handleSave = (updatedCertificate: Certificate) => {
+    setCertificates((prev) => {
+        const exists = prev.some(c => c.id === updatedCertificate.id);
+        if (exists) {
+            return prev.map((c) => (c.id === updatedCertificate.id ? updatedCertificate : c));
+        }
+        return [updatedCertificate, ...prev];
+    });
+    toast({
+      title: "Certificate Saved!",
+      description: `The certificate "${updatedCertificate.title}" has been saved.`,
+    });
+  };
+
+  const handleDelete = (certificateId: string) => {
+    setCertificates((prev) => prev.filter((c) => c.id !== certificateId));
+    toast({
+      variant: "destructive",
+      title: "Certificate Deleted",
+      description: "The certificate has been removed.",
+    });
+  };
+
+  const handleAdd = () => {
+    const newCertificate: Certificate = {
+      id: `new-cert-${new Date().getTime()}`,
+      title: "New Certificate",
+      issuer: "Issuer",
+      year: new Date().getFullYear().toString(),
+      imageUrl: "",
+      imageHint: "",
+      category: "technical",
+    };
+    setCertificates((prev) => [newCertificate, ...prev]);
+  };
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Certificates</h2>
+          <p className="text-muted-foreground">
+            Manage your certificates and achievements.
+          </p>
+        </div>
+         <Button size="sm" className="h-8 gap-1" onClick={handleAdd}>
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Add Certificate
+            </span>
+        </Button>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {certificates.map((certificate) => (
+              <CertificateForm
+                  key={certificate.id} 
+                  certificate={certificate}
+                  onSave={handleSave}
+                  onDelete={() => handleDelete(certificate.id)}
+              />
+          ))}
+      </div>
     </div>
   );
 }
@@ -466,6 +539,7 @@ export default function DashboardPage() {
         <ScrollArea className="w-full">
             <TabsList className="grid w-max grid-flow-col gap-4">
               <TabsTrigger value="projects">Projects</TabsTrigger>
+              <TabsTrigger value="certificates">Certificates</TabsTrigger>
               <TabsTrigger value="skills">Skills</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
               <TabsTrigger value="about">About</TabsTrigger>
@@ -475,6 +549,9 @@ export default function DashboardPage() {
         </ScrollArea>
         <TabsContent value="projects" className="mt-4">
           <ProjectsTab />
+        </TabsContent>
+        <TabsContent value="certificates" className="mt-4">
+          <CertificatesTab />
         </TabsContent>
         <TabsContent value="skills" className="mt-4">
           <SkillsTab />

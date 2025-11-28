@@ -29,6 +29,17 @@ export type Project = {
   liveDemoUrl: string;
 };
 
+export type Certificate = {
+  id: string;
+  title: string;
+  issuer: string;
+  year: string;
+  imageUrl: string;
+  imageHint: string;
+  category: "technical" | "other";
+  href?: string;
+};
+
 export type About = {
     tagline: string;
     title: string;
