@@ -12,7 +12,7 @@ export default function SkillsSection() {
 
   if (!isDataLoaded) {
      return (
-       <section id="skills" className="w-full py-16 md:py-24 lg:py-32">
+       <section id="skills" className="w-full py-12 md:py-16">
         <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <Skeleton className="h-10 w-1/3" />
@@ -29,7 +29,7 @@ export default function SkillsSection() {
   }
 
   return (
-    <section id="skills" className="w-full py-16 md:py-24 lg:py-32">
+    <section id="skills" className="w-full py-12 md:py-16">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-3">

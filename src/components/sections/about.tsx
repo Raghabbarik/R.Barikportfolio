@@ -121,7 +121,7 @@ export default function AboutSection() {
 
     if (!isClient || !isDataLoaded) {
         return (
-            <section id="about" className="w-full py-12 md:py-16 lg:py-20 bg-card">
+            <section id="about" className="w-full py-12 md:py-16 bg-card">
                  <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2 lg:gap-20">
                     <Skeleton className="h-[500px] w-full" />
                     <div className="space-y-6">
@@ -139,7 +139,7 @@ export default function AboutSection() {
     }
 
     return (
-        <section id="about" className="w-full py-12 md:py-16 lg:py-20 bg-card">
+        <section id="about" className="w-full py-12 md:py-16 bg-card">
             <AboutSectionContent />
         </section>
     );

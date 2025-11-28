@@ -11,7 +11,7 @@ export default function ServicesSection() {
   
   if (!isDataLoaded) {
     return (
-      <section id="services" className="w-full py-16 md:py-24 lg:py-32 bg-card">
+      <section id="services" className="w-full pt-12 md:pt-16 pb-8 md:pb-12 bg-card">
         <div className="container px-4 md:px-6">
            <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <Skeleton className="h-10 w-1/3" />
@@ -29,7 +29,7 @@ export default function ServicesSection() {
   }
 
   return (
-    <section id="services" className="w-full pt-16 md:pt-24 lg:pt-32 pb-8 md:pb-12 lg:pb-16 bg-card">
+    <section id="services" className="w-full pt-12 md:pt-16 pb-8 md:pb-12 bg-card">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-3">
@@ -56,17 +56,15 @@ export default function ServicesSection() {
           {services.map((service) => (
             <Card
               key={service.title}
-              className="group flex flex-col transition-all duration-300 hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1 border-border/20"
+              className="group flex flex-col p-6 text-left transition-all duration-300 hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1 border-border/20"
             >
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+              <CardHeader className="p-0">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 mb-4">
                       <service.icon className="w-6 h-6 text-primary" />
                   </div>
                   <CardTitle className="text-lg">{service.title}</CardTitle>
-                </div>
               </CardHeader>
-              <CardContent className="flex-grow">
+              <CardContent className="p-0 flex-grow mt-2">
                 <p className="text-sm text-muted-foreground">{service.description}</p>
               </CardContent>
             </Card>
