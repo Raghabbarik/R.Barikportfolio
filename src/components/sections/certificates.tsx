@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useData } from "@/lib/data-context";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardFooter, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TextType from "../ui/text-type";
@@ -38,10 +38,10 @@ const CertificateCard = ({ certificate }: { certificate: Certificate }) => {
                     </div>
                 )}
             </div>
-            <CardFooter className="p-4 bg-card/80 backdrop-blur-sm">
+            <CardFooter className="p-3 bg-card/80 backdrop-blur-sm">
                 <div>
-                    <CardTitle className="text-base font-semibold">{certificate.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{certificate.issuer} &bull; {certificate.year}</p>
+                    <CardTitle className="text-sm font-semibold">{certificate.title}</CardTitle>
+                    <p className="text-xs text-muted-foreground">{certificate.issuer} &bull; {certificate.year}</p>
                 </div>
             </CardFooter>
         </Card>
@@ -68,10 +68,11 @@ export default function CertificatesSection() {
                     <div className="flex justify-center py-8">
                         <Skeleton className="h-10 w-48" />
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <Skeleton className="h-80 w-full" />
-                        <Skeleton className="h-80 w-full" />
-                        <Skeleton className="h-80 w-full" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <Skeleton className="h-64 w-full" />
+                        <Skeleton className="h-64 w-full" />
+                        <Skeleton className="h-64 w-full" />
+                        <Skeleton className="h-64 w-full" />
                     </div>
                 </div>
             </section>
@@ -111,7 +112,7 @@ export default function CertificatesSection() {
                         </TabsList>
                     </div>
                     <TabsContent value="technical" className="mt-8">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {technicalCerts.length > 0 ? (
                                 technicalCerts.map((cert) => (
                                     <CertificateCard key={cert.id} certificate={cert} />
@@ -124,7 +125,7 @@ export default function CertificatesSection() {
                         </div>
                     </TabsContent>
                     <TabsContent value="other" className="mt-8">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                            {otherCerts.length > 0 ? (
                                 otherCerts.map((cert) => (
                                     <CertificateCard key={cert.id} certificate={cert} />
