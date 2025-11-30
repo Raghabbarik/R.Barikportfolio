@@ -47,7 +47,7 @@ export type Thought = {
   excerpt: string;
   date: string;
   readTime: number;
-  imageUrl: string;
+  imageUrl?: string;
   imageHint: string;
   href: string;
 };
@@ -74,9 +74,9 @@ export type About = {
         role: string;
         company: string;
     };
-    profileImageUrl: string;
+    profileImageUrl?: string;
     profileImageHint: string;
-    aboutImageUrl: string;
+    aboutImageUrl?: string;
     aboutImageHint: string;
     resumeUrl: string;
 };
