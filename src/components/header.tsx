@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Dock from './dock';
 import { navLinks } from '@/lib/data';
-import { Home, User, Briefcase, Star, MessageSquare, UserCog, Users, Heart } from 'lucide-react';
+import { Home, User, Briefcase, Star, MessageSquare, UserCog, Users, Heart, Award, FileText } from 'lucide-react';
 import type { DockItemData } from './dock';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -18,6 +18,8 @@ const iconMap: { [key: string]: React.ReactNode } = {
   Contact: <MessageSquare />,
   Admin: <UserCog />,
   Home: <Home />,
+  Certificates: <Award />,
+  Thoughts: <FileText />,
 };
 
 
