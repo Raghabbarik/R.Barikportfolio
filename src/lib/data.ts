@@ -14,12 +14,14 @@ import {
   Server,
   Globe,
   Users,
-  Award
+  Award,
+  Heart
 } from "lucide-react";
 
 export const navLinks: NavLink[] = [
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
+  { href: "#companions", label: "Companions" },
   { href: "#services", label: "Services" },
   { href: "#clients", label: "Clients" },
   { href: "#portfolio", label: "Portfolio" },

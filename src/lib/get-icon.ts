@@ -18,6 +18,7 @@ import {
   Download,
   Users,
   Github,
+  Heart,
   LucideIcon
 } from "lucide-react";
 import type { IconMap } from "./definitions";
@@ -41,6 +42,7 @@ const iconMap: IconMap = {
   Download,
   Users,
   Github,
+  Heart,
   // Add skill names to map to icons
   "Full-Stack Web Development": Code,
   "UI/UX Design": Palette,
